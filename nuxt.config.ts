@@ -5,13 +5,23 @@ export default defineNuxtConfig({
     "@nuxtjs/tailwindcss",
     "@nuxt/image",
     "@nuxtjs/google-fonts",
-    "nuxt-icon",
     "@nuxtjs/seo",
     "dayjs-nuxt",
     "@formkit/auto-animate",
     "@vee-validate/nuxt",
-    "radix-vue",
+    "nuxt-headlessui",
   ],
+  routeRules: {
+    "/novel": {
+      redirect: "/",
+    },
+    "/admin": {
+      redirect: "/admin/dashboard",
+    },
+    "/admin/**": {
+      ssr: false,
+    },
+  },
   runtimeConfig: {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
@@ -26,7 +36,9 @@ export default defineNuxtConfig({
     overwriting: true,
     download: true,
     families: {
-      Poppins: true,
+      Poppins: {
+        wght: [200, 300, 400, 500, 600, 700, 800, 900],
+      },
     },
   },
   image: {

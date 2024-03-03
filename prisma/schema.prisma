@@ -51,21 +51,41 @@ model VerificationRequest {
   @@map("verification_requests")
 }
 
+enum UserRole {
+  USER
+  ADMIN
+}
+
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  novels        Novel[]
-  chapters      Chapter[]
+  id              String    @id @default(cuid())
+  name            String
+  email           String    @unique
+  emailVerified   DateTime  @map("email_verified")
+  profileImageUrl String    @map("profile_image_url")
+  password        String?
+  role            UserRole  @default(USER)
+  badges          Badge[]   @relation("user_badges")
+  accounts        Account[]
+  sessions        Session[]
+  novels          Novel[]
+  chapters        Chapter[]
+  coverImage      MediaFile @relation(fields: [profileImageUrl], references: [url])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
+}
+
+model Badge {
+  id    String @id @default(cuid())
+  name  String @unique
+  users User[] @relation("user_badges")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("badges")
 }
 
 enum NovelType {
@@ -119,6 +139,7 @@ model MediaFile {
   size   Int
   url    String        @unique
   novels Novel[]
+  User   User[]
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -144,7 +165,7 @@ model Chapter {
 
 model Author {
   id     String  @id @default(cuid())
-  name   String
+  name   String  @unique
   novels Novel[] @relation("novel_authors")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -155,7 +176,7 @@ model Author {
 
 model Genre {
   id     String  @id @default(cuid())
-  name   String
+  name   String  @unique
   novels Novel[] @relation("novel_genres")
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -166,7 +187,7 @@ model Genre {
 
 model Tag {
   id     String  @id @default(cuid())
-  name   String
+  name   String  @unique
   novels Novel[] @relation("novel_tags")
 
   createdAt DateTime @default(now()) @map("created_at")

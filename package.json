@@ -7,14 +7,17 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "prisma:migrate": "prisma migrate dev --schema ./prisma/schema.prisma",
+    "prisma:generate": "prisma generate",
+    "prisma:studio": "prisma studio"
   },
   "dependencies": {
+    "@heroicons/vue": "^2.1.1",
     "@nuxt/image": "^1.3.0",
     "@prisma/client": "^5.10.2",
     "nuxt": "^3.10.3",
     "openid-client": "^5.6.4",
-    "radix-vue": "latest",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
   },
@@ -26,8 +29,7 @@
     "@types/bun": "^1.0.8",
     "@vee-validate/nuxt": "latest",
     "dayjs-nuxt": "latest",
-    "eslint": "^8.57.0",
-    "nuxt-icon": "^0.6.8",
+    "nuxt-headlessui": "latest",
     "prisma": "^5.10.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
