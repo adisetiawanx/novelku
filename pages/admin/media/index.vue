@@ -10,45 +10,21 @@
             @click="isOpen = true"
             class="inline-flex items-center gap-2 shadow px-5 py-1.5 rounded font-medium bg-primary hover:bg-primary/80 hover text-white"
           >
-            <PlusCircleIcon class="w-6" /><span class="text-sm">Genre</span>
+            <PlusCircleIcon class="w-6" /><span class="text-sm"
+              >Media File</span
+            >
           </button>
         </div>
         <div class="border-l pl-5 flex-1">
           <input
             type="text"
             class="text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-            placeholder="Search Genre..."
+            placeholder="Search Media File..."
           />
         </div>
       </div>
     </template>
     <template #content>
-      <!-- <div class="relative overflow-x-auto border">
-        <table class="w-full text-sm text-left rtl:text-right table-auto">
-          <thead class="text-xs uppercase border-b">
-            <tr>
-              <th scope="col" class="px-6 py-3">Name</th>
-              <th scope="col" class="px-6 py-3">Created At</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(novel, novelIndex) in 10"
-              :class="[
-                novelIndex + 1 === 10 ? '' : 'border-b',
-                'odd:bg-white even:bg-gray-50',
-              ]"
-            >
-              <td class="px-6 py-4">
-                <NuxtLink to="/" class="hover:text-blue-500">Fantasy</NuxtLink>
-              </td>
-              <td class="px-6 py-4">
-                {{ new Date().toLocaleDateString("en-US") }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div> -->
       <div class="grid grid-cols-7 gap-5">
         <div class="col-span-1 border pb-5" v-for="image in 14">
           <img
@@ -119,7 +95,7 @@
               <HeadlessDialogDescription class="mt-3">
                 <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
                   <input
-                    type="text"
+                    type="file"
                     spellcheck="false"
                     class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
                     placeholder="Name"
@@ -127,7 +103,7 @@
                   <button
                     class="col-span-1 w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
                   >
-                    Save
+                    Upload
                   </button>
                   <div
                     class="col-span-3 bg-green-200 border border-green-500 rounded py-1 px-2 flex justify-center"
