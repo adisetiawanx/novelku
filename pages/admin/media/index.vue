@@ -23,7 +23,7 @@
       </div>
     </template>
     <template #content>
-      <div class="relative overflow-x-auto border">
+      <!-- <div class="relative overflow-x-auto border">
         <table class="w-full text-sm text-left rtl:text-right table-auto">
           <thead class="text-xs uppercase border-b">
             <tr>
@@ -48,10 +48,29 @@
             </tr>
           </tbody>
         </table>
+      </div> -->
+      <div class="grid grid-cols-7 gap-5">
+        <div class="col-span-1 border pb-5" v-for="image in 14">
+          <img
+            src="https://via.placeholder.com/150"
+            alt="genre"
+            class="w-full"
+          />
+          <div class="px-3">
+            <p class="text-center mt-5 text-sm font-medium line-clamp-1">
+              Image name
+            </p>
+            <button
+              class="inline-flex justify-center text-xs font-medium text-blue-500 w-full text-center mt-2 border py-1.5 rounded-lg shadow-sm bg-white hover:bg-gray-50"
+            >
+              Copy Url
+            </button>
+          </div>
+        </div>
       </div>
       <div
         id="navigation"
-        class="flex justify-between items-center w-full border-l border-r border-b px-6 py-4 text-sm"
+        class="flex justify-between items-center w-full border px-6 py-4 text-sm mt-3"
       >
         <div class="flex-initial pr-5">
           <span class="text-gray-600">Showing 1 to 10 of 50 entries</span>

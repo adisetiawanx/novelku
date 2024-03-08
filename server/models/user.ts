@@ -1,22 +1,30 @@
 import prisma from "~/configs/db";
+import { CreateUserData } from "../types/user";
 
-const createUser = async () => {
-  //   return await prisma.user.create({
-  //     data: {
-  //       googleId,
-  //       accounts: {
-  //         create: {
-  //           providerType: "google",
-  //           providerId: googleClientId,
-  //           providerAccountId: googleId,
-  //           accessToken: tokenSet.access_token,
-  //           refreshToken: tokenSet.refresh_token,
-  //           accessTokenExpires: tokenSet.expires_at
-  //             ? new Date(tokenSet.expires_at * 1000)
-  //             : null,
-  //         },
-  //       },
-  //     },
-  //     include: { accounts: true },
-  //   });
+export const createUser = async (userData: CreateUserData) => {
+  await prisma.user.create({
+    data: {
+      email: userData.email,
+      name: userData.name,
+      emailVerified: new Date(),
+      accounts: {
+        create: {
+          compoundId: userData.compoundId,
+          providerId: userData.providerId,
+          providerAccountId: userData.providerAccountId,
+        },
+      },
+    },
+  });
+};
+
+export const getUserPasswordByEmail = async (email: string) => {
+  return await prisma.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      password: true,
+    },
+  });
 };

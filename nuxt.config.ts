@@ -15,6 +15,9 @@ export default defineNuxtConfig({
     "/novel": {
       redirect: "/",
     },
+    "/auth": {
+      redirect: "/",
+    },
     "/admin": {
       redirect: "/admin/dashboard",
     },
@@ -25,7 +28,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    googleRedirectUri: process.env.GOOGLE_REDIRECT_URI,
+    googleRedirectUri: process.env.GOOGLE_CLIENT_REDIRECT_URI,
   },
   site: {
     url: "https://localhost:3000",

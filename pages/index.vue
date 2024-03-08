@@ -1,7 +1,11 @@
 <template>
   <div>
-    <h1 class="text-xl">Hello World</h1>
+    <button @click="login">Login</button>
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+const { login } = useAuth();
+
+
+</script>

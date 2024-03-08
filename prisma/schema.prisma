@@ -8,16 +8,12 @@ datasource db {
 }
 
 model Account {
-  id                 String    @id @default(cuid())
-  compoundId         String    @unique @map("compound_id")
-  userId             String    @map("user_id")
-  providerType       String    @map("provider_type")
-  providerId         String    @map("provider_id")
-  providerAccountId  String    @map("provider_account_id")
-  refreshToken       String?   @map("refresh_token")
-  accessToken        String?   @map("access_token")
-  accessTokenExpires DateTime? @map("access_token_expires")
-  user               User      @relation(fields: [userId], references: [id])
+  id                String @id @default(cuid())
+  compoundId        String @unique @map("compound_id")
+  userId            String @map("user_id")
+  providerId        String @map("provider_id")
+  providerAccountId String @map("provider_account_id")
+  user              User   @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -57,19 +53,21 @@ enum UserRole {
 }
 
 model User {
-  id              String    @id @default(cuid())
-  name            String
-  email           String    @unique
-  emailVerified   DateTime  @map("email_verified")
-  profileImageUrl String    @map("profile_image_url")
-  password        String?
-  role            UserRole  @default(USER)
-  badges          Badge[]   @relation("user_badges")
-  accounts        Account[]
-  sessions        Session[]
-  novels          Novel[]
-  chapters        Chapter[]
-  coverImage      MediaFile @relation(fields: [profileImageUrl], references: [url])
+  id                       String     @id @default(cuid())
+  name                     String
+  email                    String     @unique
+  unverifiedEmail          String?    @unique
+  unverifiedEmailTimestamp DateTime?
+  emailVerified            DateTime   @map("email_verified")
+  profileImageUrl          String?    @map("profile_image_url")
+  password                 String?
+  role                     UserRole   @default(USER)
+  badges                   Badge[]    @relation("user_badges")
+  accounts                 Account[]
+  sessions                 Session[]
+  novels                   Novel[]
+  chapters                 Chapter[]
+  coverImage               MediaFile? @relation(fields: [profileImageUrl], references: [url])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
