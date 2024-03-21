@@ -3,7 +3,7 @@
 ## Tech Stack
 
 - Nuxt 3
-- bun
+- Bun
 
 ## Features
 
@@ -29,7 +29,7 @@ bun prisma:migrate
 ```
 
 ```bash
-bun prisma:genetare
+bun prisma:generate
 ```
 
 ## Notes
