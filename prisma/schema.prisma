@@ -67,7 +67,7 @@ model User {
   sessions                 Session[]
   novels                   Novel[]
   chapters                 Chapter[]
-  coverImage               MediaFile? @relation(fields: [profileImageUrl], references: [url])
+  profileImage             MediaFile? @relation(fields: [profileImageUrl], references: [url])
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -98,18 +98,26 @@ enum NovelStatus {
   HIATUS
 }
 
+enum PostStatus {
+  PUBLISHED
+  DRAFT
+  ARCHIVED
+}
+
 model Novel {
   id               String       @id @default(cuid())
+  postStatus       PostStatus   @default(DRAFT) @map("post_status")
   title            String
   alternativeTitle String?      @map("alternate_title")
   slug             String       @unique
   synopsis         String?      @db.Text
-  rating           Decimal?     @db.Decimal(1, 1)
+  rating           Int          @default(0)
   type             NovelType?
   year             String?
   status           NovelStatus?
   userId           String       @map("user_id")
   imageUrl         String       @map("image_url")
+  totalView        Int          @default(0) @map("total_view")
   chapters         Chapter[]
   authors          Author[]     @relation("novel_authors")
   genres           Genre[]      @relation("novel_genres")

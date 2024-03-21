@@ -2,7 +2,7 @@ import prisma from "~/configs/db";
 import { CreateUserData } from "../types/user";
 
 export const createUser = async (userData: CreateUserData) => {
-  await prisma.user.create({
+  return await prisma.user.create({
     data: {
       email: userData.email,
       name: userData.name,
@@ -15,6 +15,9 @@ export const createUser = async (userData: CreateUserData) => {
         },
       },
     },
+    select: {
+      id: true,
+    },
   });
 };
 
@@ -24,7 +27,25 @@ export const getUserPasswordByEmail = async (email: string) => {
       email,
     },
     select: {
+      id: true,
+      name: true,
       password: true,
+      role: true,
+      profileImageUrl: true,
+    },
+  });
+};
+
+export const setUserPassword = async (email: string, password: string) => {
+  return await prisma.user.update({
+    where: {
+      email,
+    },
+    data: {
+      password,
+    },
+    select: {
+      email: true,
     },
   });
 };

@@ -5,3 +5,11 @@ export type CreateUserData = {
   name: string;
   email: string;
 };
+
+export type UserInToken = {
+  id: string;
+  name?: string;
+  email: string;
+  role: "USER" | "ADMIN" | string;
+  profileImageUrl?: string;
+};

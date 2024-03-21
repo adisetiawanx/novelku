@@ -1,4 +1,5 @@
 import { createUser, getUserPasswordByEmail } from "~/server/models/user";
+import { createAccessToken, createRefreshToken } from "~/server/utils/tokens";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -19,12 +20,20 @@ export default defineEventHandler(async (event) => {
     const userEmail = userFromGoogle.email.toLowerCase();
     const userFromDB = await getUserPasswordByEmail(userEmail);
 
+    const userToToken = {
+      id: userFromDB?.id,
+      name: userFromDB?.name,
+      email: userFromGoogle.email!.toLowerCase(),
+      role: userFromDB?.role,
+      profileImageUrl: userFromDB?.profileImageUrl,
+    };
+
     if (!userFromDB) {
       //create new user whatever is login or register if not exist then user need to set password
       const providerId = "google";
       const providerAccountId = userFromGoogle.sub;
       const compoundId = `${providerId}-${providerAccountId}`;
-      await createUser({
+      const newUserFromDB = await createUser({
         //@ts-expect-error google user should have email
         email: userFromGoogle.email?.toLowerCase(),
         //@ts-expect-error google user should have name
@@ -34,41 +43,27 @@ export default defineEventHandler(async (event) => {
         compoundId,
       });
 
-      //@ts-expect-error google user should have access token
-      setCookie(event, "access_token", {
+      const newUserToToken = {
+        id: newUserFromDB.id,
         name: userFromGoogle.name,
         email: userFromGoogle.email!.toLowerCase(),
         role: "USER",
         profileImageUrl: "",
-      });
-      //@ts-expect-error google user should have access token
-      setCookie(event, "refresh_token", {
-        name: userFromGoogle.name,
-        email: userFromGoogle.email!.toLowerCase(),
-        role: "USER",
-        profileImageUrl: "",
-      });
+      };
+
+      setCookie(event, "access_token", createAccessToken(newUserToToken));
+      setCookie(event, "refresh_token", createRefreshToken(newUserToToken));
+
       return sendRedirect(event, "/auth/set-password");
     }
 
+    //@ts-expect-error user/user id must be found if it's not found then it's already created a new user ^
+    setCookie(event, "access_token", createAccessToken(userToToken));
+    //@ts-expect-error user/user id must be found if it's not found then it's already created a new user ^
+    setCookie(event, "refresh_token", createRefreshToken(userToToken));
+
     if (!userFromDB?.password) {
       //set password if user does not have password
-
-      //@ts-expect-error google user should have access token
-      setCookie(event, "access_token", {
-        name: userFromGoogle.name,
-        email: userFromGoogle.email!.toLowerCase(),
-        role: "USER",
-        profileImageUrl: "",
-      });
-      //@ts-expect-error google user should have access token
-      setCookie(event, "refresh_token", {
-        name: userFromGoogle.name,
-        email: userFromGoogle.email!.toLowerCase(),
-        role: "USER",
-        profileImageUrl: "",
-      });
-
       return sendRedirect(event, "/auth/set-password");
     }
 
