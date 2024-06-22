@@ -313,4 +313,8 @@ watch(
       .replace(/^-+|-+$/g, "");
   }
 );
+
+definePageMeta({
+  middleware: "admin-only-middleware",
+});
 </script>

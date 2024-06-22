@@ -8,3 +8,10 @@ export const isAdmin = async (event: H3Event) => {
   }
   return user;
 };
+
+export const isUserAuthorize = async (event: H3Event) => {
+  const accessToken = event.node.req.headers.authorization?.split(" ")[1] || "";
+  const user = verifyAccessToken(accessToken);
+
+  return user;
+};

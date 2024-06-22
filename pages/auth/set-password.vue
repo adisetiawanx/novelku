@@ -139,8 +139,12 @@ const handleUpdatePassword = async () => {
   if (respone.value) {
     states.value.success = respone.value.msg;
     states.value.isLoading = false;
-    return;
-    navigateTo("/admin");
+
+    const callbackUrl = useCookie("callback_url").value;
+    return navigateTo(callbackUrl || "/", {
+      replace: true,
+      external: true,
+    });
   }
 };
 </script>

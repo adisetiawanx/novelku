@@ -138,4 +138,8 @@ const isOpen = ref(false);
 function setIsOpen(value: boolean) {
   isOpen.value = value;
 }
+
+definePageMeta({
+  middleware: "admin-only-middleware",
+});
 </script>

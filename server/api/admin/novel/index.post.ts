@@ -1,6 +1,5 @@
 import { createNovel, getNovelSlugBySlug } from "~/server/models/novel";
 import { createNovelData } from "~/server/types/novel";
-import { isAdmin } from "~/server/utils/is-admin-middleware";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -83,6 +82,7 @@ export default defineEventHandler(async (event) => {
         })
       );
     } else {
+      console.error(error);
       return sendError(
         event,
         createError({

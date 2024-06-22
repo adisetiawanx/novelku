@@ -2,7 +2,7 @@ import { setUserPassword } from "~/server/models/user";
 
 export default defineEventHandler(async (event) => {
   try {
-    const userInToken = await isAdmin(event);
+    const userInToken = await isUserAuthorize(event);
 
     const body = await readBody(event);
     const password = body.password;
