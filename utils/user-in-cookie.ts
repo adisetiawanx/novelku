@@ -11,7 +11,8 @@ export default function getUserFromToken() {
     email: user.email as string,
     name: user.name as string,
     role: user.role as string,
-    profileImageUrl: (user.profileImageUrl as string) || "",
+    profileImageUrl:
+      (user.profileImageUrl as string) || "/assets/dummy-profile-picture.png",
   };
 }
 

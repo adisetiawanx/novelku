@@ -52,3 +52,53 @@ export const getNovelSlugBySlug = async (slug: string) => {
     },
   });
 };
+
+export const getNovels = async (
+  take: number | undefined,
+  skip: number | undefined,
+  search?: string | undefined
+) => {
+  let where = {};
+  if (search) {
+    where = {
+      OR: [
+        {
+          title: {
+            contains: search,
+            mode: "insensitive",
+          },
+        },
+      ],
+    };
+  }
+  const novels = await prisma.novel.findMany({
+    take,
+    skip,
+    where,
+    include: {
+      authors: {
+        select: {
+          name: true,
+        },
+      },
+      genres: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
+  const totalNovel = await prisma.novel.count({
+    where,
+  });
+
+  return {
+    novels,
+    totalNovel,
+  };
+};

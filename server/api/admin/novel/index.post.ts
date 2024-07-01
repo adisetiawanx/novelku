@@ -3,7 +3,7 @@ import { createNovelData } from "~/server/types/novel";
 
 export default defineEventHandler(async (event) => {
   try {
-    const userInToken = await isAdmin(event);
+    const userInToken = await isAdminAuthorize(event);
 
     const body = await readBody(event);
     let {

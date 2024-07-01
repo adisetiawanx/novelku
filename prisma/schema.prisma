@@ -142,7 +142,6 @@ model MediaFile {
   id     String        @id @default(cuid())
   name   String
   type   MediaFileType
-  size   Int
   url    String        @unique
   novels Novel[]
   User   User[]

@@ -59,8 +59,8 @@
               <div class="flex h-16 shrink-0 items-center">
                 <img
                   class="h-8 w-auto"
-                  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                  alt="Your Company"
+                  src="/assets/novelku-logo.png"
+                  alt="Novelku"
                 />
               </div>
               <nav class="flex flex-1 flex-col">
@@ -150,11 +150,7 @@
       class="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-4"
     >
       <div class="flex h-16 shrink-0 items-center">
-        <img
-          class="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
+        <img class="h-8 w-auto" src="/assets/novelku-logo.png" alt="Novelku" />
       </div>
       <nav class="flex flex-1 flex-col">
         <ul role="list" class="flex flex-1 flex-col gap-y-7">
@@ -273,14 +269,14 @@
               <span class="sr-only">Open user menu</span>
               <img
                 class="h-8 w-8 rounded-full bg-gray-50"
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                alt=""
+                :src="user.profileImageUrl"
+                :alt="user.name"
               />
               <span class="hidden lg:flex lg:items-center">
                 <span
                   class="ml-4 text-sm font-semibold leading-6 text-gray-900"
                   aria-hidden="true"
-                  >Tom Cook</span
+                  >{{ user.name }}</span
                 >
                 <ChevronDownIcon
                   class="ml-2 h-5 w-5 text-gray-400"
@@ -328,7 +324,7 @@
     </div>
 
     <div
-      class="sticky top-16 z-40 flex shrink-0 items-center gap-x-4 border-gray-200 bg-white/80 backdrop-blur-md px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
+      class="sticky top-16 z-20 flex shrink-0 items-center gap-x-4 border-gray-200 bg-white/80 backdrop-blur-md px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
     >
       <slot name="sticky" />
     </div>
@@ -359,6 +355,7 @@ import {
 import { ChevronDownIcon } from "@heroicons/vue/24/solid";
 
 const adminPath = "/admin";
+const user = userInCookie();
 
 const navigation = ref([
   {

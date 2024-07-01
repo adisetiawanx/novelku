@@ -45,7 +45,6 @@ export default defineNuxtConfig({
     },
   },
   image: {
-    quality: 80,
     format: ["webp"],
     cloudinary: {
       baseURL: "https://res.cloudinary.com/novelku/image/upload",

@@ -20,14 +20,6 @@ export default defineEventHandler(async (event) => {
     const userEmail = userFromGoogle.email.toLowerCase();
     const userFromDB = await getUserPasswordByEmail(userEmail);
 
-    const userToToken = {
-      id: userFromDB?.id,
-      name: userFromDB?.name,
-      email: userFromGoogle.email!.toLowerCase(),
-      role: userFromDB?.role,
-      profileImageUrl: userFromDB?.profileImageUrl,
-    };
-
     if (!userFromDB) {
       //create new user whatever is login or register if not exist then user need to set password
       const providerId = "google";
@@ -57,6 +49,14 @@ export default defineEventHandler(async (event) => {
       return sendRedirect(event, "/auth/set-password");
     }
 
+    const userToToken = {
+      id: userFromDB?.id,
+      name: userFromDB?.name,
+      email: userFromGoogle.email!.toLowerCase(),
+      role: userFromDB?.role,
+      profileImageUrl: userFromDB?.profileImageUrl,
+    };
+
     //@ts-expect-error user/user id must be found if it's not found then it's already created a new user ^
     setCookie(event, "access_token", createAccessToken(userToToken));
     //@ts-expect-error user/user id must be found if it's not found then it's already created a new user ^
@@ -75,6 +75,15 @@ export default defineEventHandler(async (event) => {
         createError({
           statusCode: error.statusCode,
           statusMessage: error.message,
+        })
+      );
+    } else {
+      console.error(error);
+      return sendError(
+        event,
+        createError({
+          statusCode: 500,
+          statusMessage: "Internal Server Error",
         })
       );
     }

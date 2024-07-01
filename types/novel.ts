@@ -9,7 +9,7 @@ type NovelTag = {
   name: string;
 };
 
-export type NovelDataFromWEb = {
+export type NovelDataFromWeb = {
   post_status: "PUBLISHED" | "DRAFT" | "ARCHIVED" | string;
   title: string;
   alternative_title: string;
@@ -23,4 +23,30 @@ export type NovelDataFromWEb = {
   authors: NovelAuthor[];
   genres: NovelGenre[];
   tags: NovelTag[];
+};
+
+export type NovelDataFromServer = {
+  id: string;
+  postStatus: "PUBLISHED" | "DRAFT" | "ARCHIVED" | string;
+  title: string;
+  alternativeTitle: string | null;
+  slug: string;
+  synopsis: string | null;
+  rating: number;
+  type:
+    | "WEB_NOVEL_CHINA"
+    | "WEB_NOVEL_KOREA"
+    | "WEB_NOVEL_JAPAN"
+    | string
+    | null;
+  year: string | null;
+  status: "COMPLETED" | "ONGOING" | "HIATUS" | string | null;
+  userId: string;
+  imageUrl: string;
+  totalViews: number;
+  authors: NovelAuthor[];
+  genres: NovelGenre[];
+  tags: NovelTag[];
+  createdAt: Date;
+  updatedAt: Date;
 };

@@ -7,14 +7,17 @@
       <div class="flex justify-between items-center w-full py-3">
         <div class="flex-initial pr-5">
           <button
-            @click="isOpen = true"
+            @click="isAddNovelModalOpen = true"
             class="inline-flex items-center gap-2 shadow px-5 py-1.5 rounded font-medium bg-primary hover:bg-primary/80 hover text-white"
           >
             <PlusCircleIcon class="w-6" /><span class="text-sm">Novel</span>
           </button>
         </div>
+
         <div class="border-l pl-5 flex-1">
           <input
+            @input="searchNovel"
+            v-model="pageQuery.search"
             type="text"
             class="text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
             placeholder="Search novel..."
@@ -23,220 +26,120 @@
       </div>
     </template>
     <template #content>
-      <div class="relative overflow-x-auto border">
-        <table class="w-full text-sm text-left rtl:text-right table-auto">
-          <thead class="text-xs uppercase border-b">
-            <tr>
-              <th scope="col" class="px-6 py-3">Title</th>
-              <th scope="col" class="px-6 py-3">Type</th>
-              <th scope="col" class="px-6 py-3">Authors</th>
-              <th scope="col" class="px-6 py-3">Genres</th>
-              <th scope="col" class="px-6 py-3">Tags</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="(novel, novelIndex) in 10"
-              :class="[
-                novelIndex + 1 === 10 ? '' : 'border-b',
-                'odd:bg-white even:bg-gray-50',
-              ]"
-            >
-              <td class="px-6 py-4 flex items-center">
-                <span
-                  class="bg-green-200 border border-green-500 rounded-full text-xs py-0.5 px-2 mr-3 font-medium lowercase"
-                  >Completed</span
-                ><NuxtLink to="/" class="hover:text-blue-500 line-clamp-1"
-                  >Genius Doctor: Black Belly Miss
-                </NuxtLink>
-                <DocumentCheckIcon class="ml-1 w-4 inline text-primary" />
-              </td>
-              <td class="px-6 py-4">Web Novel China</td>
-              <td class="px-6 py-4">North Night</td>
-              <td class="px-6 py-4">
-                Action, Adventure, Fantasy, Josei, Romance, Xuanhuan
-              </td>
-              <td class="px-6 py-4">Novel China, Tamat</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div
-        id="navigation"
-        class="flex justify-between items-center w-full border-l border-r border-b px-6 py-4 text-sm"
+      <p
+        v-if="!novels || novels.length === 0"
+        class="text-sm italic text-gray-600"
       >
-        <div class="flex-initial pr-5">
-          <span class="text-gray-600">Showing 1 to 10 of 50 entries</span>
+        No novel found.
+      </p>
+      <div v-else>
+        <div class="relative overflow-x-auto border">
+          <table class="w-full text-sm text-left rtl:text-right table-auto">
+            <thead class="text-xs uppercase border-b">
+              <tr>
+                <th scope="col" class="px-6 py-3">Title</th>
+                <th scope="col" class="px-6 py-3">Type</th>
+                <th scope="col" class="px-6 py-3">Authors</th>
+                <th scope="col" class="px-6 py-3">Genres</th>
+                <th scope="col" class="px-6 py-3">Tags</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                v-for="(novel, novelIndex) in novels"
+                :class="[
+                  novelIndex + 1 === 10 ? '' : 'border-b',
+                  'odd:bg-white even:bg-gray-50',
+                ]"
+              >
+                <td class="px-6 py-4 flex items-center">
+                  <DocumentCheckIcon
+                    v-if="novel.postStatus === 'PUBLISHED'"
+                    class="mr-3 w-5 inline text-green-700"
+                  />
+                  <DocumentIcon v-else class="mr-2 w-5 inline text-gray-500" />
+                  <NuxtLink
+                    :to="`/admin/novel/${novel.slug}`"
+                    class="hover:text-blue-500 line-clamp-1"
+                    >{{ novel.title }}
+                  </NuxtLink>
+                  <span
+                    :class="[
+                      novel.status === 'ONGOING'
+                        ? 'bg-yellow-200 border border-yellow-500'
+                        : '',
+                      novel.status === 'COMPLETED'
+                        ? 'bg-green-200 border border-green-500'
+                        : '',
+                      novel.status === 'HIATUS'
+                        ? 'bg-red-200 border border-red-500'
+                        : '',
+                      ' rounded-full text-xs py-0.5 px-2 ml-2 font-medium',
+                    ]"
+                    >{{ onlyFirstLatterToUpperCase(novel.status) }}</span
+                  >
+                </td>
+                <td class="px-6 py-4">{{ convertNovelType(novel.type) }}</td>
+                <td class="px-6 py-4">
+                  {{
+                    arrayToTextWithComma(novel.authors.map((a: any) => a.name))
+                  }}
+                </td>
+                <td class="px-6 py-4">
+                  {{
+                    arrayToTextWithComma(novel.genres.map((g: any) => g.name))
+                  }}
+                </td>
+                <td class="px-6 py-4">
+                  {{ arrayToTextWithComma(novel.tags.map((t: any) => t.name)) }}
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        <div class="border-l pl-5 flex-1">
-          <div class="flex items-center gap-3">
-            <button
-              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline"
+        <div
+          id="navigation"
+          class="flex justify-between items-center w-full border-l border-r border-b px-6 py-4 text-sm"
+        >
+          <div class="flex-initial pr-5">
+            <span class="text-gray-600"
+              >Showing {{ (pageNumber - 1) * pageQuery.take + 1 }} to
+              {{ pageNumber * pageQuery.take }} of
+              {{ totalNovel }} entries</span
             >
-              Previous
-            </button>
-            <button
-              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline"
-            >
-              Next
-            </button>
+          </div>
+          <div class="border-l pl-5 flex-1">
+            <div class="flex items-center gap-3">
+              <button
+                :disabled="pageNumber === 1"
+                @click="
+                  pageQuery.skip -= pageQuery.take;
+                  fetchNovels();
+                "
+                class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
+              >
+                Previous
+              </button>
+              <button
+                :disabled="pageNumber * pageQuery.take >= totalNovel"
+                @click="
+                  pageQuery.skip += pageQuery.take;
+                  fetchNovels();
+                "
+                class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </template>
-    <HeadlessTransitionRoot
-      :show="isOpen"
-      as="template"
-      enter="duration-300 ease-out"
-      enter-from="opacity-0"
-      enter-to="opacity-100"
-      leave="duration-200 ease-in"
-      leave-from="opacity-100"
-      leave-to="opacity-0"
-    >
-      <HeadlessDialog @close="setIsOpen" class="relative z-[500]">
-        <!-- The backdrop, rendered as a fixed sibling to the panel container -->
-        <div class="fixed inset-0 bg-black/30" />
 
-        <!-- Full-screen scrollable container -->
-        <div class="fixed inset-0 w-screen overflow-y-auto">
-          <!-- Container to center the panel -->
-          <div class="flex min-h-full items-center justify-center p-4">
-            <!-- The actual dialog panel -->
-            <HeadlessDialogPanel class="w-full max-w-7xl rounded bg-white p-5">
-              <HeadlessDialogTitle
-                class="font-medium text-primary-dark border-b pb-3"
-                >Add New Novel</HeadlessDialogTitle
-              >
-
-              <HeadlessDialogDescription class="mt-3">
-                <div class="grid grid-cols-4 items-center gap-y-3 gap-x-1.5">
-                  <input
-                    v-model="novelInput.slug"
-                    type="text"
-                    spellcheck="false"
-                    disabled
-                    class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Slug"
-                  />
-                  <input
-                    v-model="novelInput.title"
-                    type="text"
-                    spellcheck="false"
-                    class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Title"
-                  />
-                  <input
-                    v-model="novelInput.alternative_title"
-                    type="text"
-                    spellcheck="false"
-                    class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Alternative Title"
-                  />
-                  <textarea
-                    v-model="novelInput.synopsis"
-                    type="text"
-                    spellcheck="false"
-                    class="col-span-4 text-sm border min-h-72 w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Synopsis"
-                  />
-                  <input
-                    v-model="novelInput.rating"
-                    type="number"
-                    spellcheck="false"
-                    class="col-span-1 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Rating"
-                  />
-                  <input
-                    v-model="novelInput.year"
-                    type="text"
-                    spellcheck="false"
-                    class="col-span-1 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Year"
-                  />
-                  <select
-                    v-model="novelInput.type"
-                    class="col-span-1 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  >
-                    <option value="">- Select -</option>
-                    <option value="WEB_NOVEL_CHINA">Web Novel China</option>
-                    <option value="WEB_NOVEL_KOREA">Web Novel Korea</option>
-                    <option value="WEB_NOVEL_JAPAN">Web Novel Japan</option>
-                  </select>
-                  <select
-                    v-model="novelInput.status"
-                    class="col-span-1 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  >
-                    <option value="">- Select -</option>
-                    <option value="ONGOING">Ongoing</option>
-                    <option value="COMPLETED">Completed</option>
-                    <option value="HIATUS">Hiatus</option>
-                  </select>
-
-                  <div class="col-span-4 flex gap-3">
-                    <NuxtImg
-                      src="https://novelku.id/wp-content/uploads/2023/09/Night-Ranger-193x278.jpg"
-                      class="w-full max-w-[200px] rounded border border-gray-300"
-                    />
-                    <div class="flex-1 space-y-3">
-                      <input
-                        type="file"
-                        class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-2 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                      />
-                      <input
-                        v-model="novelInput.genres"
-                        type="text"
-                        spellcheck="false"
-                        class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                        placeholder="Genre"
-                      />
-                      <input
-                        v-model="novelInput.authors"
-                        type="text"
-                        spellcheck="false"
-                        class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                        placeholder="Author"
-                      />
-                      <input
-                        v-model="novelInput.tags"
-                        type="text"
-                        spellcheck="false"
-                        class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                        placeholder="Tag"
-                      />
-                      <div class="flex gap-3">
-                        <button
-                          @click="postNovel('DRAFT')"
-                          class="w-full border border-primary py-1 text-primary hover:bg-gray-50 font-medium rounded"
-                        >
-                          Draft
-                        </button>
-                        <button
-                          @click="postNovel('PUBLISHED')"
-                          class="w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
-                        >
-                          Publish
-                        </button>
-                      </div>
-                      <div
-                        class="col-span-2 bg-green-200 border border-green-500 rounded py-1 flex justify-center"
-                      >
-                        <p class="text-sm">
-                          Successfully created new novel!<span
-                            class="ml-2 font-semibold"
-                            >Black King Hunter From The West Side</span
-                          >
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </HeadlessDialogDescription>
-            </HeadlessDialogPanel>
-          </div>
-        </div>
-      </HeadlessDialog>
-    </HeadlessTransitionRoot>
+    <ModalAddNovelModal
+      :isOpen="isAddNovelModalOpen"
+      @close="closeAddNovelModal"
+    />
   </NuxtLayout>
 </template>
 
@@ -246,73 +149,59 @@ import {
   DocumentCheckIcon,
   DocumentIcon,
 } from "@heroicons/vue/24/solid";
+import { debounce } from "lodash-es";
+import type { NovelDataFromServer } from "~/types/novel";
 
-const isOpen = ref(false);
 const states = ref({
   isLoading: false,
   success: "" as string | null,
   error: "" as string | null,
 });
 
-const novelInput = ref({
-  title: "",
-  slug: "",
-  alternative_title: "",
-  synopsis: "",
-  rating: 0,
-  year: "",
-  type: "",
-  status: "",
-  image_url:
-    "https://novelku.id/wp-content/uploads/2023/09/Night-Ranger-193x278.jpg",
-  authors: "",
-  genres: "",
-  tags: "",
+const route = useRoute();
+const pageNumber = route.query.page ? Number(route.query.page) : 1;
+const pageQuery = ref({
+  take: 10,
+  skip: (pageNumber - 1) * 10,
+  search: "",
 });
 
-function setIsOpen(value: boolean) {
-  isOpen.value = value;
+const novels = ref<NovelDataFromServer | any>([]);
+const totalNovel = ref<number>(0);
+
+const isAddNovelModalOpen = ref(false);
+function closeAddNovelModal() {
+  isAddNovelModalOpen.value = false;
 }
 
-async function postNovel(postStatus: string) {
-  const { createNovel } = useNovel();
+async function fetchNovels() {
+  const { getNovels } = useNovel();
 
   states.value.isLoading = true;
-  const respone = await createNovel({
-    post_status: postStatus,
-    title: novelInput.value.title,
-    slug: novelInput.value.slug,
-    alternative_title: novelInput.value.alternative_title,
-    synopsis: novelInput.value.synopsis,
-    rating: novelInput.value.rating,
-    year: novelInput.value.year,
-    type: novelInput.value.type,
-    status: novelInput.value.status,
-    image_url: novelInput.value.image_url,
-    authors: novelInput.value.authors
-      .split(",")
-      .map((genre) => ({ name: genre.trim() })),
-    genres: novelInput.value.genres
-      .split(",")
-      .map((genre) => ({ name: genre.trim() })),
-    tags: novelInput.value.tags
-      .split(",")
-      .map((genre) => ({ name: genre.trim() })),
+  const respone = await getNovels({
+    take: pageQuery.value.take,
+    skip: pageQuery.value.skip,
+    search: pageQuery.value.search,
   });
+
+  novels.value = (respone?.data?.novels as any) ?? [];
+  totalNovel.value = respone?.data?.totalNovel ?? 0;
+
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 }
 
-watch(
-  () => novelInput.value.title,
-  (value) => {
-    novelInput.value.slug = value
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
-  }
-);
+const searchNovel = debounce(async () => {
+  states.value.isLoading = true;
+  pageQuery.value.skip = 0;
+  await fetchNovels();
+  states.value.isLoading = false;
+}, 500);
+
+onMounted(async () => {
+  await fetchNovels();
+});
 
 definePageMeta({
   middleware: "admin-only-middleware",
