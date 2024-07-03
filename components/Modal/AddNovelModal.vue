@@ -121,7 +121,8 @@
                       class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
                       placeholder="Tag"
                     />
-                    <div class="flex gap-3">
+                    <UILoadingSpinner v-if="states.isLoading" />
+                    <div v-else class="flex gap-3">
                       <button
                         @click="postNovel('DRAFT')"
                         class="w-full border border-primary py-1 text-primary hover:bg-gray-50 font-medium rounded"
@@ -135,16 +136,13 @@
                         Publish
                       </button>
                     </div>
-                    <div
-                      class="col-span-2 bg-green-200 border border-green-500 rounded py-1 flex justify-center"
+                    <UISuccessWrapper
+                      v-if="states.success && !states.isLoading"
+                      >{{ states.success }}</UISuccessWrapper
                     >
-                      <p class="text-sm">
-                        Successfully created new novel!<span
-                          class="ml-2 font-semibold"
-                          >Black King Hunter From The West Side</span
-                        >
-                      </p>
-                    </div>
+                    <UIErrorWrapper v-if="states.error && !states.isLoading">{{
+                      states.error
+                    }}</UIErrorWrapper>
                   </div>
                 </div>
               </div>
@@ -188,6 +186,8 @@ const novelInput = ref({
 const uploadNovelCover = async (event: Event) => {
   const { uploadNovelCover } = useNovel();
 
+  clearStates();
+
   states.value.isLoading = true;
 
   // @ts-expect-error
@@ -202,6 +202,8 @@ const uploadNovelCover = async (event: Event) => {
 
 async function postNovel(postStatus: string) {
   const { createNovel } = useNovel();
+
+  clearStates();
 
   states.value.isLoading = true;
   const respone = await createNovel({
@@ -227,6 +229,12 @@ async function postNovel(postStatus: string) {
   });
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
+  states.value.isLoading = false;
+}
+
+function clearStates() {
+  states.value.success = null;
+  states.value.error = null;
   states.value.isLoading = false;
 }
 

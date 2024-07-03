@@ -26,8 +26,9 @@
       </div>
     </template>
     <template #content>
+      <UILoadingSpinner v-if="states.isLoading" />
       <p
-        v-if="!novels || novels.length === 0"
+        v-else-if="!novels || novels.length === 0"
         class="text-sm italic text-gray-600"
       >
         No novel found.
