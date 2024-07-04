@@ -18,3 +18,11 @@ export const convertNovelType = (type: string) => {
 export const arrayToTextWithComma = (array: string[]) => {
   return array.join(", ");
 };
+
+export const convertDate = (date: string) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};

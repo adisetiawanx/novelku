@@ -139,6 +139,7 @@
 
     <ModalAddNovelModal
       :isOpen="isAddNovelModalOpen"
+      @fetchNovels="fetchNovels"
       @close="closeAddNovelModal"
     />
   </NuxtLayout>
@@ -178,6 +179,8 @@ function closeAddNovelModal() {
 async function fetchNovels() {
   const { getNovels } = useNovel();
 
+  clearStates();
+
   states.value.isLoading = true;
   const respone = await getNovels({
     take: pageQuery.value.take,
@@ -199,6 +202,12 @@ const searchNovel = debounce(async () => {
   await fetchNovels();
   states.value.isLoading = false;
 }, 500);
+
+function clearStates() {
+  states.value.success = null;
+  states.value.error = null;
+  states.value.isLoading = false;
+}
 
 onMounted(async () => {
   await fetchNovels();

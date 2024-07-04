@@ -14,8 +14,8 @@ export const createNovel = async (novel: createNovelData) => {
       type: novel.type,
       status: novel.status,
       year: novel.year,
-      imageUrl: novel.image_url,
       totalView: 0,
+      imageUrl: novel.image_url,
       genres: {
         connectOrCreate: novel.genres.map((genre) => ({
           create: { name: genre.name.toLowerCase() },
@@ -49,6 +49,17 @@ export const getNovelSlugBySlug = async (slug: string) => {
     },
     select: {
       slug: true,
+    },
+  });
+};
+
+export const getNovelIdBySlug = async (slug: string) => {
+  return prisma.novel.findUnique({
+    where: {
+      slug,
+    },
+    select: {
+      id: true,
     },
   });
 };
@@ -101,4 +112,45 @@ export const getNovels = async (
     novels,
     totalNovel,
   };
+};
+
+export const getNovelBySlug = async (slug: string) => {
+  return prisma.novel.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      authors: {
+        select: {
+          name: true,
+        },
+      },
+      genres: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
+      },
+      chapters: {
+        select: {
+          title: true,
+          number: true,
+        },
+        orderBy: {
+          number: "asc",
+        },
+      },
+      _count: {
+        select: {
+          chapters: true,
+          comments: true,
+          bookmarks: true,
+        },
+      },
+    },
+  });
 };

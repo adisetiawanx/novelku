@@ -131,7 +131,7 @@
                       </button>
                       <button
                         @click="postNovel('PUBLISHED')"
-                        class="w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
+                        class="w-full border border-primary bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
                       >
                         Publish
                       </button>
@@ -159,7 +159,7 @@ defineProps({
   isOpen: Boolean,
 });
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "fetchNovels"]);
 
 const states = ref({
   isLoading: false,
@@ -176,8 +176,7 @@ const novelInput = ref({
   year: "",
   type: "",
   status: "",
-  image_url:
-    "https://novelku.id/wp-content/uploads/2023/09/Night-Ranger-193x278.jpg",
+  image_url: "/assets/no-image.jpg",
   authors: "",
   genres: "",
   tags: "",
@@ -193,7 +192,7 @@ const uploadNovelCover = async (event: Event) => {
   // @ts-expect-error
   const respone = await uploadNovelCover(event.target.files[0]);
 
-  novelInput.value.image_url = respone?.data?.url ?? "";
+  novelInput.value.image_url = respone?.data?.image.url ?? "";
 
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
@@ -230,6 +229,8 @@ async function postNovel(postStatus: string) {
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
+
+  emit("fetchNovels");
 }
 
 function clearStates() {

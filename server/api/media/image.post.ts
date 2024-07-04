@@ -57,8 +57,10 @@ export default defineEventHandler(async (event) => {
     return {
       msg: "Image uploaded successfully",
       data: {
-        name: fileName,
-        url: cldRes.url,
+        image: {
+          name: fileName,
+          url: cldRes.url,
+        },
       },
     };
   } catch (error) {

@@ -9,6 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "prisma:migrate": "prisma migrate dev --schema ./prisma/schema.prisma",
+    "prisma:reset": "prisma migrate reset --schema ./prisma/schema.prisma",
     "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio"
   },
