@@ -51,6 +51,7 @@ export default defineEventHandler(async (event) => {
     await addMediaFile({
       name: fileName,
       url: cldRes.url,
+      size: file.size, // in bytes
       type: "IMAGE",
     });
 
