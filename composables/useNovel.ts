@@ -108,13 +108,57 @@ export default () => {
     }
   };
 
-  const getNovelBySlug = async (slug: string) => {
+  const getNovel = async (id: string) => {
+    const { data: respone, error } = await useFetch(`/api/admin/novel/${id}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + useCookie("access_token").value,
+      },
+    });
+
+    if (error.value) {
+      return {
+        errorMessage: error.value.statusMessage,
+        successMessage: null,
+        data: null,
+      };
+    }
+
+    if (respone.value) {
+      return {
+        errorMessage: null,
+        successMessage: respone.value.msg,
+        data: respone.value.data,
+      };
+    }
+  };
+
+  const updateNovel = async (
+    novelOldSlug: string,
+    novelData: NovelDataFromWeb
+  ) => {
     const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${slug}`,
+      `/api/admin/novel/${novelOldSlug}`,
       {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + useCookie("access_token").value,
+        },
+        body: {
+          post_status: novelData.post_status,
+          title: novelData.title,
+          alternative_title: novelData.alternative_title,
+          slug: novelData.slug,
+          synopsis: novelData.synopsis,
+          rating: novelData.rating,
+          type: novelData.type,
+          year: novelData.year,
+          status: novelData.status,
+          image_url: novelData.image_url,
+          authors: novelData.authors,
+          genres: novelData.genres,
+          tags: novelData.tags,
         },
       }
     );
@@ -140,6 +184,7 @@ export default () => {
     createNovel,
     getNovels,
     uploadNovelCover,
-    getNovelBySlug,
+    getNovel,
+    updateNovel,
   };
 };

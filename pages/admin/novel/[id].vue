@@ -52,6 +52,7 @@
             </transition>
           </HeadlessMenu>
           <button
+            @click="isEditNovelOpen = true"
             class="inline-flex gap-1.5 items-center px-5 border border-primary bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
           >
             <PencilIcon class="w-3.5 inline" />
@@ -135,8 +136,18 @@
 
     <ModalAddNovelChapterManual
       :isOpen="isAddChapterManualOpen"
-      :novelSlug="String(novelSlug)"
+      :novelId="String(novelId)"
+      @fetch-novel="fetchNovel"
       @close="isAddChapterManualOpen = false"
+    />
+
+    <ModalEditNovelModal
+      v-if="novel"
+      :isOpen="isEditNovelOpen"
+      :novel-data="novel"
+      :novelId="String(novelId)"
+      @fetch-novel="fetchNovel"
+      @close="isEditNovelOpen = false"
     />
   </NuxtLayout>
 </template>
@@ -149,7 +160,7 @@ import {
   PencilIcon,
 } from "@heroicons/vue/24/solid";
 const route = useRoute();
-const novelSlug = route.params.slug;
+const novelId = route.params.id;
 
 const states = ref({
   isLoading: false,
@@ -157,19 +168,20 @@ const states = ref({
   error: "" as string | null,
 });
 
-const novel = ref();
+const novel = ref<any>();
 
 const isAddChapterManualOpen = ref(false);
 const isAddChapterBulkOpen = ref(false);
+const isEditNovelOpen = ref(false);
 
 async function fetchNovel() {
-  const { getNovelBySlug } = useNovel();
+  const { getNovel } = useNovel();
 
   clearStates();
 
   states.value.isLoading = true;
 
-  const respone = await getNovelBySlug(String(novelSlug));
+  const respone = await getNovel(String(novelId));
   novel.value = respone?.data?.novel;
 
   states.value.success = respone?.successMessage ?? null;

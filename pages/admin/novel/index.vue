@@ -60,7 +60,7 @@
                   />
                   <DocumentIcon v-else class="mr-2 w-5 inline text-gray-500" />
                   <NuxtLink
-                    :to="`/admin/novel/${novel.slug}`"
+                    :to="`/admin/novel/${novel.id}`"
                     class="hover:text-blue-500 line-clamp-1"
                     >{{ novel.title }}
                   </NuxtLink>

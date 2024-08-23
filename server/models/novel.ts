@@ -53,17 +53,6 @@ export const getNovelSlugBySlug = async (slug: string) => {
   });
 };
 
-export const getNovelIdBySlug = async (slug: string) => {
-  return prisma.novel.findUnique({
-    where: {
-      slug,
-    },
-    select: {
-      id: true,
-    },
-  });
-};
-
 export const getNovels = async (
   take: number | undefined,
   skip: number | undefined,
@@ -114,10 +103,10 @@ export const getNovels = async (
   };
 };
 
-export const getNovelBySlug = async (slug: string) => {
+export const getNovelById = async (id: string) => {
   return prisma.novel.findUnique({
     where: {
-      slug,
+      id,
     },
     include: {
       authors: {
@@ -150,6 +139,41 @@ export const getNovelBySlug = async (slug: string) => {
           comments: true,
           bookmarks: true,
         },
+      },
+    },
+  });
+};
+
+export const updateNovelById = async (id: string, novel: createNovelData) => {
+  return prisma.novel.update({
+    where: {
+      id,
+    },
+    data: {
+      title: novel.title,
+      postStatus: novel.post_status,
+      slug: novel.slug,
+      synopsis: novel.synopsis,
+      rating: novel.rating,
+      alternativeTitle: novel.alternative_title,
+      type: novel.type,
+      status: novel.status,
+      year: novel.year,
+      imageUrl: novel.image_url,
+      genres: {
+        set: novel.genres.map((genre) => ({
+          name: genre.name.toLowerCase(),
+        })),
+      },
+      authors: {
+        set: novel.authors.map((author) => ({
+          name: author.name,
+        })),
+      },
+      tags: {
+        set: novel.tags.map((tag) => ({
+          name: tag.name,
+        })),
       },
     },
   });

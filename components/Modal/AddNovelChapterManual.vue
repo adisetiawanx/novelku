@@ -77,13 +77,13 @@
 <script lang="ts" setup>
 const props = defineProps({
   isOpen: Boolean,
-  novelSlug: {
+  novelId: {
     type: String,
     required: true,
   },
 });
 
-const emit = defineEmits(["close", "fetchChapters"]);
+const emit = defineEmits(["close", "fetchNovel"]);
 
 const states = ref({
   isLoading: false,
@@ -103,7 +103,7 @@ async function postChapter() {
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await createChapter(props.novelSlug, {
+  const respone = await createChapter(props.novelId, {
     title: chapterInput.value.title,
     number: chapterInput.value.number,
     text: chapterInput.value.text,
@@ -112,7 +112,7 @@ async function postChapter() {
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
-  emit("fetchChapters");
+  emit("fetchNovel");
 }
 
 function clearStates() {
