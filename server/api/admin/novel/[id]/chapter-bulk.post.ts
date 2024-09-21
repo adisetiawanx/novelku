@@ -67,33 +67,47 @@ export default defineEventHandler(async (event) => {
       throw new ErrorWithCode(400, "File not found");
     }
 
+    let chaptersExtracted = [];
     const uploadDir = path.join(process.cwd(), "public", "upload", "temp");
     const extractedDir = path.join(uploadDir, path.parse(file.filename).name);
+    try {
+      await extract(file.path, { dir: extractedDir });
 
-    await extract(file.path, { dir: extractedDir });
+      const chapterFolders = await fs.readdir(extractedDir);
 
-    const chapterFolders = await fs.readdir(extractedDir);
+      for (const chapterFolder of chapterFolders) {
+        const chapterPath = path.join(extractedDir, chapterFolder);
+        const contentFilePath = path.join(chapterPath, "content_text.txt");
 
-    let chaptersExtracted = [];
-    for (const chapterFolder of chapterFolders) {
-      const chapterPath = path.join(extractedDir, chapterFolder);
-      const contentFilePath = path.join(chapterPath, "content_text.txt");
+        const fileContent = await fs.readFile(contentFilePath, "utf-8");
 
-      const fileContent = await fs.readFile(contentFilePath, "utf-8");
+        const chapterFolderArr = chapterFolder.split(" ");
+        const chapterIndex = chapterFolderArr.findIndex(
+          (t) => t.toLowerCase() === "chapter"
+        );
+        const chapterNumber = parseInt(chapterFolderArr[chapterIndex + 1]);
 
-      const chapterNumber = Number(chapterFolder.trim().split(" ")[1]);
-
-      chaptersExtracted.push({
-        title: chapterFolder,
-        number: chapterNumber,
-        text: fileContent,
-        novelId: params.id,
-        userId: userInToken.id,
-      });
+        chaptersExtracted.push({
+          title: chapterFolder,
+          number: chapterNumber,
+          text: fileContent,
+          novelId: params.id,
+          userId: userInToken.id,
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      return sendError(
+        event,
+        createError({
+          statusCode: 500,
+          statusMessage: "Internal Server Error",
+        })
+      );
+    } finally {
+      await fs.rm(extractedDir, { recursive: true, force: true });
+      await fs.rm(file.path);
     }
-
-    await fs.rm(extractedDir, { recursive: true, force: true });
-    await fs.rm(file.path);
 
     const chaptersData = await createChapterBulk(chaptersExtracted);
 

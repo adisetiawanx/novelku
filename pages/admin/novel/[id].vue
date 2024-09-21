@@ -121,10 +121,10 @@
         >
           No chapters found.
         </p>
-        <div v-else class="grid grid-cols-5 gap-1.5">
+        <div v-else class="grid gap-3 grid-cols-1">
           <div
             v-for="chapter in novel.chapters"
-            class="flex justify-between items-center gap-5 bg-white border rounded p-3 w-full hover:text-primary hover:bg-gray-50"
+            class="flex justify-between items-center gap-5 bg-gray-50 hover:bg-white border rounded px-3 py-2 w-full hover:text-primary"
           >
             <div>
               <span class="min-w-14 inline-block font-medium">{{
