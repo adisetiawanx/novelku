@@ -96,6 +96,7 @@
                   />
                   <div class="flex-1 space-y-3">
                     <input
+                      id="novel_cover_input"
                       @change="uploadNovelCover"
                       type="file"
                       class="col-span-2 text-sm border w-full border-gray-300 rounded px-3 py-2 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
@@ -230,7 +231,26 @@ async function postNovel(postStatus: string) {
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
+  if (states.value.success) {
+    clearInput();
+  }
+
   emit("fetchNovels");
+}
+
+function clearInput() {
+  (document.getElementById("novel_cover_input") as HTMLInputElement).value = "";
+  novelInput.value.title = "";
+  novelInput.value.alternative_title = "";
+  novelInput.value.synopsis = "";
+  novelInput.value.rating = 0;
+  novelInput.value.year = "";
+  novelInput.value.type = "";
+  novelInput.value.status = "";
+  novelInput.value.image_url = "/assets/no-image.jpg";
+  novelInput.value.authors = "";
+  novelInput.value.genres = "";
+  novelInput.value.tags = "";
 }
 
 function clearStates() {

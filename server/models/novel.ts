@@ -126,6 +126,7 @@ export const getNovelById = async (id: string) => {
       },
       chapters: {
         select: {
+          id: true,
           title: true,
           number: true,
         },

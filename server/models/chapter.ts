@@ -31,3 +31,11 @@ export const createChapterBulk = async (
     data: chapters,
   });
 };
+
+export const deleteChapter = async (chapterId: string) => {
+  return await prisma.chapter.delete({
+    where: {
+      id: chapterId,
+    },
+  });
+};

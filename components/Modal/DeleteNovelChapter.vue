@@ -18,39 +18,51 @@
         <!-- Container to center the panel -->
         <div class="flex min-h-full items-center justify-center p-4">
           <!-- The actual dialog panel -->
-          <HeadlessDialogPanel class="w-full max-w-6xl rounded bg-white p-5">
+          <HeadlessDialogPanel class="w-full max-w-2xl rounded bg-white p-5">
             <HeadlessDialogTitle
               class="font-medium text-primary-dark border-b pb-3"
-              >Add New Chapter (Bulk Upload)</HeadlessDialogTitle
-            >
+              >Delete:
+              <span class="font-normal"
+                >{{ props.novelTitle }} - {{ props.chapterTitle }}</span
+              >
+            </HeadlessDialogTitle>
 
             <HeadlessDialogDescription class="mt-3">
               <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
-                <div
-                  class="col-span-4 border border-red-500 bg-red-200 rounded p-3 w-fit"
-                >
-                  <p class="font-medium text-sm mb-2">
-                    The Structure must be like this:
-                  </p>
-                  <img src="/assets/example-chapter-bulk.png" />
-                </div>
-                <input
-                  id="chapter_bulk_input"
-                  @change="changeChapterBulk"
-                  type="file"
-                  accept=".zip,.rar"
-                  class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                />
-
                 <UILoadingSpinner v-if="states.isLoading" />
-                <button
+                <div
                   v-else
-                  @click="postChapters"
-                  class="col-span-1 w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
+                  :class="[
+                    states.success ? 'order-2' : '',
+                    'col-span-4 flex gap-5',
+                  ]"
                 >
-                  Publish
-                </button>
-                <div class="col-span-3 w-full">
+                  <button
+                    v-if="!states.success"
+                    @click="emit('close')"
+                    class="w-full bg-gray-500 hover:bg-gray-400 py-1 text-white font-medium rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    v-if="!states.success"
+                    @click="deleteChapter"
+                    class="w-full bg-red-500 hover:bg-red-400 py-1 text-white font-medium rounded"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    v-if="states.success"
+                    @click="
+                      emit('close');
+                      clearStates();
+                    "
+                    class="w-full mt-2 bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
+                  >
+                    Back
+                  </button>
+                </div>
+                <div class="col-span-4 w-full">
                   <UISuccessWrapper
                     v-if="states.success && !states.isLoading"
                     >{{ states.success }}</UISuccessWrapper
@@ -71,7 +83,19 @@
 <script lang="ts" setup>
 const props = defineProps({
   isOpen: Boolean,
+  novelTitle: {
+    type: String,
+    required: true,
+  },
   novelId: {
+    type: String,
+    required: true,
+  },
+  chapterTitle: {
+    type: String,
+    required: true,
+  },
+  chapterId: {
     type: String,
     required: true,
   },
@@ -85,39 +109,18 @@ const states = ref({
   error: "" as string | null,
 });
 
-const chapterInput = ref({
-  fileBulk: null as any,
-});
-
-function changeChapterBulk(e: any) {
-  chapterInput.value.fileBulk = e.target.files[0];
-}
-
-async function postChapters() {
-  const { createChapterBulk } = useChapter();
+async function deleteChapter() {
+  const { deleteChapter } = useChapter();
 
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await createChapterBulk(
-    chapterInput.value.fileBulk,
-    props.novelId
-  );
+  const respone = await deleteChapter(props.chapterId, props.novelId);
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
-  if (states.value.success) {
-    clearInput();
-  }
-
   emit("fetchNovel");
-}
-
-function clearInput() {
-  chapterInput.value.fileBulk = null;
-  (document.getElementById("chapter_bulk_input") as HTMLInputElement).value =
-    "";
 }
 
 function clearStates() {

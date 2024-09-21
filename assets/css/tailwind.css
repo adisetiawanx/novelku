@@ -9,3 +9,7 @@ body {
 .heading-admin {
   @apply text-2xl font-semibold;
 }
+
+button {
+  outline: none;
+}

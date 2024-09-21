@@ -112,7 +112,17 @@ async function postChapter() {
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
+  if (states.value.success) {
+    clearInput();
+  }
+
   emit("fetchNovel");
+}
+
+function clearInput() {
+  chapterInput.value.title = "";
+  chapterInput.value.number = 0;
+  chapterInput.value.text = "";
 }
 
 function clearStates() {

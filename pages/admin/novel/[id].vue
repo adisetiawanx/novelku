@@ -124,18 +124,31 @@
         <div v-else class="grid grid-cols-5 gap-1.5">
           <div
             v-for="chapter in novel.chapters"
-            class="bg-white border rounded p-3 w-full hover:text-primary hover:underline hover:bg-gray-50 cursor-pointer"
+            class="flex justify-between items-center gap-5 bg-white border rounded p-3 w-full hover:text-primary hover:bg-gray-50"
           >
-            <span class="min-w-12 inline-block font-medium">{{
-              chapter.number
-            }}</span>
-            <span>{{ chapter.title }}</span>
+            <div>
+              <span class="min-w-14 inline-block font-medium">{{
+                chapter.number
+              }}</span>
+              <button class="cursor-pointer hover:underline">
+                {{ chapter.title }}
+              </button>
+            </div>
+            <TrashIcon
+              @click="
+                isDeleteChapterOpen = true;
+                deleteChapterId = chapter.id;
+                deleteChapterTitle = chapter.title;
+              "
+              class="w-5 text-red-500 cursor-pointer"
+            />
           </div>
         </div>
       </div>
     </template>
 
     <ModalAddNovelChapterManual
+      v-if="isAddChapterManualOpen"
       :isOpen="isAddChapterManualOpen"
       :novelId="String(novelId)"
       @fetch-novel="fetchNovel"
@@ -143,14 +156,30 @@
     />
 
     <ModalAddNovelChapterBulk
+      v-if="isAddChapterBulkOpen"
       :isOpen="isAddChapterBulkOpen"
       :novelId="String(novelId)"
       @fetch-novel="fetchNovel"
       @close="isAddChapterBulkOpen = false"
     />
 
+    <ModalDeleteNovelChapter
+      v-if="isDeleteChapterOpen"
+      :isOpen="isDeleteChapterOpen"
+      :novelId="String(novelId)"
+      :novelTitle="String(novel?.title)"
+      :chapterId="String(deleteChapterId)"
+      :chapterTitle="String(deleteChapterTitle)"
+      @fetch-novel="fetchNovel"
+      @close="
+        isDeleteChapterOpen = false;
+        deleteChapterId = '';
+        deleteChapterTitle = '';
+      "
+    />
+
     <ModalEditNovelModal
-      v-if="novel"
+      v-if="isEditNovelOpen"
       :isOpen="isEditNovelOpen"
       :novel-data="novel"
       :novelId="String(novelId)"
@@ -166,6 +195,7 @@ import {
   DocumentCheckIcon,
   DocumentIcon,
   PencilIcon,
+  TrashIcon,
 } from "@heroicons/vue/24/solid";
 const route = useRoute();
 const novelId = route.params.id;
@@ -181,6 +211,10 @@ const novel = ref<any>();
 const isAddChapterManualOpen = ref(false);
 const isAddChapterBulkOpen = ref(false);
 const isEditNovelOpen = ref(false);
+
+const isDeleteChapterOpen = ref(false);
+const deleteChapterId = ref("");
+const deleteChapterTitle = ref("");
 
 async function fetchNovel() {
   const { getNovel } = useNovel();
