@@ -17,3 +17,17 @@ export const createChapter = async (chapter: {
     },
   });
 };
+
+export const createChapterBulk = async (
+  chapters: {
+    title: string;
+    number: number;
+    text: string;
+    novelId: string;
+    userId: string;
+  }[]
+) => {
+  return await prisma.chapter.createMany({
+    data: chapters,
+  });
+};

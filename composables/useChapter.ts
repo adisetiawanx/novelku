@@ -1,6 +1,6 @@
 export default () => {
   const createChapter = async (
-    novelSlug: string,
+    novelId: string,
     chapterData: {
       title: string;
       number: number;
@@ -8,7 +8,7 @@ export default () => {
     }
   ) => {
     const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${novelSlug}/chapter`,
+      `/api/admin/novel/${novelId}/chapter`,
       {
         method: "POST",
         headers: {
@@ -39,7 +39,41 @@ export default () => {
       };
     }
   };
+
+  const createChapterBulk = async (novelBulk: any, novelId: string) => {
+    const formData = new FormData();
+    formData.append("file", novelBulk);
+
+    const { data: respone, error } = await useFetch(
+      `/api/admin/novel/${novelId}/chapter-bulk`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+        body: formData,
+      }
+    );
+
+    if (error.value) {
+      return {
+        errorMessage: error.value.statusMessage,
+        successMessage: null,
+        data: null,
+      };
+    }
+
+    if (respone.value) {
+      return {
+        errorMessage: null,
+        successMessage: respone.value.msg,
+        data: respone.value.data,
+      };
+    }
+  };
+
   return {
     createChapter,
+    createChapterBulk,
   };
 };

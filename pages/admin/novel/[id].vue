@@ -43,6 +43,7 @@
                 </HeadlessMenuItem>
                 <HeadlessMenuItem>
                   <button
+                    @click="isAddChapterBulkOpen = true"
                     class="text-green-500 px-3 py-1 text-sm leading-6 hover:bg-gray-50 w-full text-left"
                   >
                     Bulk Upload
@@ -139,6 +140,13 @@
       :novelId="String(novelId)"
       @fetch-novel="fetchNovel"
       @close="isAddChapterManualOpen = false"
+    />
+
+    <ModalAddNovelChapterBulk
+      :isOpen="isAddChapterBulkOpen"
+      :novelId="String(novelId)"
+      @fetch-novel="fetchNovel"
+      @close="isAddChapterBulkOpen = false"
     />
 
     <ModalEditNovelModal

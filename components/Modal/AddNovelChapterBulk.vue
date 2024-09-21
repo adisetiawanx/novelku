@@ -21,31 +21,24 @@
           <HeadlessDialogPanel class="w-full max-w-6xl rounded bg-white p-5">
             <HeadlessDialogTitle
               class="font-medium text-primary-dark border-b pb-3"
-              >Add New Chapter</HeadlessDialogTitle
+              >Add New Chapter (Bulk Upload)</HeadlessDialogTitle
             >
 
             <HeadlessDialogDescription class="mt-3">
               <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
+                <div
+                  class="col-span-4 border border-red-500 bg-red-200 rounded p-3 w-fit"
+                >
+                  <p class="font-medium text-sm mb-2">
+                    The Structure must be like this:
+                  </p>
+                  <img src="/assets/example-chapter-bulk.png" />
+                </div>
                 <input
-                  v-model="chapterInput.title"
-                  type="text"
-                  spellcheck="false"
+                  @change="changeChapterBulk"
+                  type="file"
+                  accept=".zip,.rar"
                   class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  placeholder="Name"
-                />
-                <input
-                  v-model="chapterInput.number"
-                  type="number"
-                  spellcheck="false"
-                  class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  placeholder="Number"
-                />
-                <textarea
-                  v-model="chapterInput.text"
-                  type="text"
-                  spellcheck="false"
-                  class="col-span-4 text-sm border min-h-96 w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  placeholder="Text"
                 />
 
                 <UILoadingSpinner v-if="states.isLoading" />
@@ -92,22 +85,23 @@ const states = ref({
 });
 
 const chapterInput = ref({
-  title: "",
-  number: 0,
-  text: "",
+  fileBulk: null as any,
 });
 
+function changeChapterBulk(e: any) {
+  chapterInput.value.fileBulk = e.target.files[0];
+}
+
 async function postChapter() {
-  const { createChapter } = useChapter();
+  const { createChapterBulk } = useChapter();
 
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await createChapter(props.novelId, {
-    title: chapterInput.value.title,
-    number: chapterInput.value.number,
-    text: chapterInput.value.text,
-  });
+  const respone = await createChapterBulk(
+    chapterInput.value.fileBulk,
+    props.novelId
+  );
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;

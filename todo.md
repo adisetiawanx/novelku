@@ -4,6 +4,6 @@
 
 <!-- todo -->
 
-- membuat fitur bulk upload chapter novel
+- membuat chapter novel view dan edit (admin)
 
 <!-- progress -->
