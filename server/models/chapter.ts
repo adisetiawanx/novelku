@@ -39,3 +39,29 @@ export const deleteChapter = async (chapterId: string) => {
     },
   });
 };
+
+export const updateChapter = async (chapter: {
+  id: string;
+  title: string;
+  number: number;
+  text: string;
+}) => {
+  return await prisma.chapter.update({
+    where: {
+      id: chapter.id,
+    },
+    data: {
+      title: chapter.title,
+      number: chapter.number,
+      text: chapter.text,
+    },
+  });
+};
+
+export const getChapterById = async (chapterId: string) => {
+  return await prisma.chapter.findUnique({
+    where: {
+      id: chapterId,
+    },
+  });
+};

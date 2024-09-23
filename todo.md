@@ -4,6 +4,6 @@
 
 <!-- todo -->
 
-- membuat chapter novel view dan edit (admin)
+- membuat search chapter dan delete novel
 
 <!-- progress -->

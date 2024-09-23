@@ -130,7 +130,13 @@
               <span class="min-w-14 inline-block font-medium">{{
                 chapter.number
               }}</span>
-              <button class="cursor-pointer hover:underline">
+              <button
+                @click="
+                  isEditChapterOpen = true;
+                  editChapterId = chapter.id;
+                "
+                class="cursor-pointer hover:underline"
+              >
                 {{ chapter.title }}
               </button>
             </div>
@@ -178,6 +184,15 @@
       "
     />
 
+    <ModalEditNovelChapter
+      v-if="isEditChapterOpen"
+      :isOpen="isEditChapterOpen"
+      :novelId="String(novelId)"
+      :chapterId="editChapterId"
+      @fetch-novel="fetchNovel"
+      @close="isEditChapterOpen = false"
+    />
+
     <ModalEditNovelModal
       v-if="isEditNovelOpen"
       :isOpen="isEditNovelOpen"
@@ -211,10 +226,11 @@ const novel = ref<any>();
 const isAddChapterManualOpen = ref(false);
 const isAddChapterBulkOpen = ref(false);
 const isEditNovelOpen = ref(false);
-
 const isDeleteChapterOpen = ref(false);
 const deleteChapterId = ref("");
 const deleteChapterTitle = ref("");
+const isEditChapterOpen = ref(false);
+const editChapterId = ref("");
 
 async function fetchNovel() {
   const { getNovel } = useNovel();
