@@ -92,6 +92,9 @@ export const getNovels = async (
         },
       },
     },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
   const totalNovel = await prisma.novel.count({
     where,
@@ -176,6 +179,14 @@ export const updateNovelById = async (id: string, novel: createNovelData) => {
           name: tag.name,
         })),
       },
+    },
+  });
+};
+
+export const deleteNovel = async (id: string) => {
+  return prisma.novel.delete({
+    where: {
+      id,
     },
   });
 };

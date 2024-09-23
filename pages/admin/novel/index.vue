@@ -94,6 +94,16 @@
                 <td class="px-6 py-4">
                   {{ arrayToTextWithComma(novel.tags.map((t: any) => t.name)) }}
                 </td>
+                <td class="px-6 py-4">
+                  <TrashIcon
+                    @click="
+                      deleteNovelId = novel.id;
+                      deleteNovelTitle = novel.title;
+                      isDeleteNovelOpen = true;
+                    "
+                    class="w-6 text-white cursor-pointer bg-red-500 p-1 rounded"
+                  />
+                </td>
               </tr>
             </tbody>
           </table>
@@ -137,10 +147,20 @@
       </div>
     </template>
 
-    <ModalAddNovelModal
+    <ModalAddNovel
+      v-if="isAddNovelModalOpen"
       :isOpen="isAddNovelModalOpen"
       @fetchNovels="fetchNovels"
-      @close="closeAddNovelModal"
+      @close="isAddNovelModalOpen = false"
+    />
+
+    <ModalDeleteNovel
+      v-if="isDeleteNovelOpen"
+      :isOpen="isDeleteNovelOpen"
+      @fetchNovels="fetchNovels"
+      :novelId="String(deleteNovelId)"
+      :novelTitle="String(deleteNovelTitle)"
+      @close="isDeleteNovelOpen = false"
     />
   </NuxtLayout>
 </template>
@@ -150,6 +170,7 @@ import {
   PlusCircleIcon,
   DocumentCheckIcon,
   DocumentIcon,
+  TrashIcon,
 } from "@heroicons/vue/24/solid";
 import { debounce } from "lodash-es";
 import type { NovelDataFromServer } from "~/types/novel";
@@ -172,9 +193,9 @@ const novels = ref<NovelDataFromServer | any>([]);
 const totalNovel = ref<number>(0);
 
 const isAddNovelModalOpen = ref(false);
-function closeAddNovelModal() {
-  isAddNovelModalOpen.value = false;
-}
+const isDeleteNovelOpen = ref(false);
+const deleteNovelId = ref("");
+const deleteNovelTitle = ref("");
 
 async function fetchNovels() {
   const { getNovels } = useNovel();

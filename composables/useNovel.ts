@@ -180,11 +180,38 @@ export default () => {
     }
   };
 
+  const deleteNovel = async (id: string) => {
+    const { data: respone, error } = await useFetch(`/api/admin/novel/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + useCookie("access_token").value,
+      },
+    });
+
+    if (error.value) {
+      return {
+        errorMessage: error.value.statusMessage,
+        successMessage: null,
+        data: null,
+      };
+    }
+
+    if (respone.value) {
+      return {
+        errorMessage: null,
+        successMessage: respone.value.msg,
+        data: respone.value.data,
+      };
+    }
+  };
+
   return {
     createNovel,
     getNovels,
     uploadNovelCover,
     getNovel,
     updateNovel,
+    deleteNovel,
   };
 };

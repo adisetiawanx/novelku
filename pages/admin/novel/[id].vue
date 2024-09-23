@@ -122,8 +122,15 @@
           No chapters found.
         </p>
         <div v-else class="grid gap-3 grid-cols-1">
+          <input
+            @input="searchChapter"
+            type="text"
+            class="text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
+            placeholder="Search chapter..."
+          />
+
           <div
-            v-for="chapter in novel.chapters"
+            v-for="chapter in chapters"
             class="flex justify-between items-center gap-5 bg-gray-50 hover:bg-white border rounded px-3 py-2 w-full hover:text-primary"
           >
             <div>
@@ -193,7 +200,7 @@
       @close="isEditChapterOpen = false"
     />
 
-    <ModalEditNovelModal
+    <ModalEditNovel
       v-if="isEditNovelOpen"
       :isOpen="isEditNovelOpen"
       :novel-data="novel"
@@ -212,6 +219,8 @@ import {
   PencilIcon,
   TrashIcon,
 } from "@heroicons/vue/24/solid";
+import { debounce } from "lodash-es";
+
 const route = useRoute();
 const novelId = route.params.id;
 
@@ -222,6 +231,7 @@ const states = ref({
 });
 
 const novel = ref<any>();
+const chapters = ref<any>();
 
 const isAddChapterManualOpen = ref(false);
 const isAddChapterBulkOpen = ref(false);
@@ -241,6 +251,7 @@ async function fetchNovel() {
 
   const respone = await getNovel(String(novelId));
   novel.value = respone?.data?.novel;
+  chapters.value = novel.value.chapters;
 
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
@@ -252,6 +263,19 @@ function clearStates() {
   states.value.error = null;
   states.value.isLoading = false;
 }
+
+const searchChapter = debounce((event: any) => {
+  let filteredChapters = [];
+  const search = event.target.value.toLowerCase();
+  if (!event.target.value) {
+    filteredChapters = novel.value.chapters;
+  } else {
+    filteredChapters = novel.value.chapters.filter((chapter: any) =>
+      chapter.title.toLowerCase().includes(search)
+    );
+  }
+  chapters.value = filteredChapters;
+}, 500);
 
 onMounted(async () => {
   await fetchNovel();

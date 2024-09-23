@@ -4,6 +4,6 @@
 
 <!-- todo -->
 
-- membuat search chapter dan delete novel
+- melakukan restructure server endpoint biar lebih bagus
 
 <!-- progress -->
