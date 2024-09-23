@@ -1,21 +1,30 @@
-import { getNovelById } from "~/server/models/novel";
+import { updateChapter } from "~/server/models/chapter";
 
 export default defineEventHandler(async (event) => {
   try {
     await isAdminAuthorize(event);
 
     const params = getRouterParams(event);
+    const id = params.chapterId;
 
-    const novelData = await getNovelById(String(params.id));
+    const body = await readBody(event);
+    let { title, number, text } = body;
 
-    if (!novelData) {
-      throw new ErrorWithCode(404, "Novel not found");
+    if (!title || !number || !text) {
+      throw new ErrorWithCode(400, "Missing required fields");
     }
 
+    const chapterData = await updateChapter({
+      id,
+      title,
+      number,
+      text,
+    });
+
     return {
-      msg: "Novel fetched successfully",
+      msg: "Chapter updated successfully",
       data: {
-        novel: novelData,
+        chapter: chapterData,
       },
     };
   } catch (error) {

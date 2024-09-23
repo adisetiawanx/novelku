@@ -1,21 +1,21 @@
-import { getChapterById } from "~/server/models/chapter";
+import { getNovelById } from "~/server/models/novel";
 
 export default defineEventHandler(async (event) => {
   try {
     await isAdminAuthorize(event);
 
-    const { id } = getRouterParams(event);
+    const params = getRouterParams(event);
 
-    const chapterData = await getChapterById(id);
+    const novelData = await getNovelById(String(params.novelId));
 
-    if (!chapterData) {
-      throw new ErrorWithCode(404, "Chapter not found");
+    if (!novelData) {
+      throw new ErrorWithCode(404, "Novel not found");
     }
 
     return {
-      msg: "Chapter fetched successfully",
+      msg: "Novel fetched successfully",
       data: {
-        chapter: chapterData,
+        novel: novelData,
       },
     };
   } catch (error) {

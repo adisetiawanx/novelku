@@ -48,7 +48,7 @@ export default defineEventHandler(async (event) => {
       throw new ErrorWithCode(400, "Slug already exist");
     }
 
-    const novel = await updateNovelById(params.id, {
+    const novel = await updateNovelById(params.novelId, {
       user_id: userInToken.id,
       post_status,
       title,

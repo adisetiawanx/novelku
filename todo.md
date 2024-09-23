@@ -4,6 +4,6 @@
 
 <!-- todo -->
 
-- melakukan restructure server endpoint biar lebih bagus
+- membuat fungsionalitas halaman-halaman lainnya (admin)
 
 <!-- progress -->

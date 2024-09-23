@@ -91,7 +91,7 @@ export default defineEventHandler(async (event) => {
           title: chapterFolder,
           number: chapterNumber,
           text: fileContent,
-          novelId: params.id,
+          novelId: params.novelId,
           userId: userInToken.id,
         });
       }

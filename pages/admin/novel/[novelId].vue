@@ -222,7 +222,7 @@ import {
 import { debounce } from "lodash-es";
 
 const route = useRoute();
-const novelId = route.params.id;
+const novelId = route.params.novelId;
 
 const states = ref({
   isLoading: false,

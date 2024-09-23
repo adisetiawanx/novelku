@@ -1,22 +1,22 @@
-import { deleteChapter } from "~/server/models/chapter";
+import { deleteNovel } from "~/server/models/novel";
 
 export default defineEventHandler(async (event) => {
   try {
     await isAdminAuthorize(event);
 
-    const body = await readBody(event);
-    let { chapterId } = body;
+    const params = getRouterParams(event);
+    const novelId = params.novelId;
 
-    if (!chapterId) {
+    if (!novelId) {
       throw new ErrorWithCode(400, "Missing required fields");
     }
 
-    const chapterData = await deleteChapter(chapterId);
+    const novelData = await deleteNovel(novelId);
 
     return {
-      msg: "Chapter deleted successfully",
+      msg: "Novel deleted successfully",
       data: {
-        chapter: chapterData,
+        chapter: novelData,
       },
     };
   } catch (error) {

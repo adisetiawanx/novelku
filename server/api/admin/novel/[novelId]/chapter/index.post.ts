@@ -1,22 +1,29 @@
-import { deleteNovel } from "~/server/models/novel";
+import { createChapter } from "~/server/models/chapter";
 
 export default defineEventHandler(async (event) => {
   try {
-    await isAdminAuthorize(event);
+    const userInToken = await isAdminAuthorize(event);
 
     const params = getRouterParams(event);
-    const novelId = params.id;
+    const body = await readBody(event);
+    let { title, number, text } = body;
 
-    if (!novelId) {
+    if (!title || !number || !text) {
       throw new ErrorWithCode(400, "Missing required fields");
     }
 
-    const novelData = await deleteNovel(novelId);
+    const chapterData = await createChapter({
+      title,
+      number,
+      text,
+      novelId: params.novelId,
+      userId: userInToken.id,
+    });
 
     return {
-      msg: "Novel deleted successfully",
+      msg: "Chapter created successfully",
       data: {
-        chapter: novelData,
+        chapter: chapterData,
       },
     };
   } catch (error) {

@@ -45,7 +45,7 @@ export default () => {
     formData.append("file", novelBulk);
 
     const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${novelId}/chapter-bulk`,
+      `/api/admin/novel/${novelId}/chapter/bulk`,
       {
         method: "POST",
         headers: {
@@ -74,15 +74,12 @@ export default () => {
 
   const deleteChapter = async (chapterId: string, novelId: string) => {
     const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${novelId}/chapter`,
+      `/api/admin/novel/${novelId}/chapter/${chapterId}`,
       {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
           Authorization: "Bearer " + useCookie("access_token").value,
-        },
-        body: {
-          chapterId,
         },
       }
     );
@@ -118,7 +115,7 @@ export default () => {
     text: string;
   }) => {
     const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${novelId}/chapter`,
+      `/api/admin/novel/${novelId}/chapter/${chapterId}`,
       {
         method: "PUT",
         headers: {
@@ -126,7 +123,6 @@ export default () => {
           Authorization: "Bearer " + useCookie("access_token").value,
         },
         body: {
-          id: chapterId,
           title,
           number,
           text,

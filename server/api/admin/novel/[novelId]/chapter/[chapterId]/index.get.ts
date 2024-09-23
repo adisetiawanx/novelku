@@ -1,27 +1,20 @@
-import { createChapter } from "~/server/models/chapter";
+import { getChapterById } from "~/server/models/chapter";
 
 export default defineEventHandler(async (event) => {
   try {
-    const userInToken = await isAdminAuthorize(event);
+    await isAdminAuthorize(event);
 
     const params = getRouterParams(event);
-    const body = await readBody(event);
-    let { title, number, text } = body;
+    const id = params.chapterId;
 
-    if (!title || !number || !text) {
-      throw new ErrorWithCode(400, "Missing required fields");
+    const chapterData = await getChapterById(id);
+
+    if (!chapterData) {
+      throw new ErrorWithCode(404, "Chapter not found");
     }
 
-    const chapterData = await createChapter({
-      title,
-      number,
-      text,
-      novelId: params.id,
-      userId: userInToken.id,
-    });
-
     return {
-      msg: "Chapter created successfully",
+      msg: "Chapter fetched successfully",
       data: {
         chapter: chapterData,
       },
