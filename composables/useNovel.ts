@@ -2,43 +2,43 @@ import type { NovelDataFromWeb } from "~/types/novel";
 
 export default () => {
   const createNovel = async (novelData: NovelDataFromWeb) => {
-    const { data: respone, error } = await useFetch("/api/admin/novel", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + useCookie("access_token").value,
-      },
-      body: {
-        post_status: novelData.post_status,
-        title: novelData.title,
-        alternative_title: novelData.alternative_title,
-        slug: novelData.slug,
-        synopsis: novelData.synopsis,
-        rating: novelData.rating,
-        type: novelData.type,
-        year: novelData.year,
-        status: novelData.status,
-        image_url: novelData.image_url,
-        authors: novelData.authors,
-        genres: novelData.genres,
-        tags: novelData.tags,
-      },
-    });
+    try {
+      const respone = await $fetch("/api/admin/novel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+        body: {
+          post_status: novelData.post_status,
+          title: novelData.title,
+          alternative_title: novelData.alternative_title,
+          slug: novelData.slug,
+          synopsis: novelData.synopsis,
+          rating: novelData.rating,
+          type: novelData.type,
+          year: novelData.year,
+          status: novelData.status,
+          image_url: novelData.image_url,
+          authors: novelData.authors,
+          genres: novelData.genres,
+          tags: novelData.tags,
+        },
+      });
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 
@@ -51,85 +51,84 @@ export default () => {
     skip: number;
     search: string;
   }) => {
-    const { data: respone, error } = await useFetch(
-      `/api/admin/novel?take=${take}&skip=${skip}&search=${search}`,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + useCookie("access_token").value,
-        },
-      }
-    );
+    try {
+      const respone = await $fetch(
+        `/api/admin/novel?take=${take}&skip=${skip}&search=${search}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + useCookie("access_token").value,
+          },
+        }
+      );
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 
   const uploadNovelCover = async (file: any | null) => {
     const formData = new FormData();
-
     formData.append("file", file);
 
-    const { data: respone, error } = await useFetch("/api/media/image", {
-      method: "POST",
-      headers: {
-        Authorization: "Bearer " + useCookie("access_token").value,
-      },
-      body: formData,
-    });
+    try {
+      const respone = await $fetch("/api/media/image", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+        body: formData,
+      });
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 
   const getNovel = async (id: string) => {
-    const { data: respone, error } = await useFetch(`/api/admin/novel/${id}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + useCookie("access_token").value,
-      },
-    });
+    try {
+      const respone = await $fetch(`/api/admin/novel/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+      });
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 
@@ -137,9 +136,8 @@ export default () => {
     novelOldSlug: string,
     novelData: NovelDataFromWeb
   ) => {
-    const { data: respone, error } = await useFetch(
-      `/api/admin/novel/${novelOldSlug}`,
-      {
+    try {
+      const respone = await $fetch(`/api/admin/novel/${novelOldSlug}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -160,49 +158,47 @@ export default () => {
           genres: novelData.genres,
           tags: novelData.tags,
         },
-      }
-    );
+      });
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 
   const deleteNovel = async (id: string) => {
-    const { data: respone, error } = await useFetch(`/api/admin/novel/${id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + useCookie("access_token").value,
-      },
-    });
+    try {
+      const respone = await $fetch(`/api/admin/novel/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+      });
 
-    if (error.value) {
-      return {
-        errorMessage: error.value.statusMessage,
-        successMessage: null,
-        data: null,
-      };
-    }
-
-    if (respone.value) {
       return {
         errorMessage: null,
-        successMessage: respone.value.msg,
-        data: respone.value.data,
+        successMessage: respone.msg,
+        data: respone.data,
       };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
     }
   };
 

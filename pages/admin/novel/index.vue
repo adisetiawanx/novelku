@@ -147,14 +147,14 @@
       </div>
     </template>
 
-    <ModalAddNovel
+    <ModalNovelAdd
       v-if="isAddNovelModalOpen"
       :isOpen="isAddNovelModalOpen"
       @fetchNovels="fetchNovels"
       @close="isAddNovelModalOpen = false"
     />
 
-    <ModalDeleteNovel
+    <ModalNovelDelete
       v-if="isDeleteNovelOpen"
       :isOpen="isDeleteNovelOpen"
       @fetchNovels="fetchNovels"

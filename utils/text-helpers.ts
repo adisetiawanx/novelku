@@ -20,7 +20,7 @@ export const arrayToTextWithComma = (array: string[]) => {
 };
 
 export const convertDate = (date: string) => {
-  return new Date(date).toLocaleDateString("en-US", {
+  return new Date(date).toLocaleDateString("id-ID", {
     year: "numeric",
     month: "long",
     day: "numeric",

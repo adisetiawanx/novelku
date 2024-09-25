@@ -160,7 +160,7 @@
       </div>
     </template>
 
-    <ModalAddNovelChapterManual
+    <ModalNovelAddChapterManual
       v-if="isAddChapterManualOpen"
       :isOpen="isAddChapterManualOpen"
       :novelId="String(novelId)"
@@ -168,7 +168,7 @@
       @close="isAddChapterManualOpen = false"
     />
 
-    <ModalAddNovelChapterBulk
+    <ModalNovelAddChapterBulk
       v-if="isAddChapterBulkOpen"
       :isOpen="isAddChapterBulkOpen"
       :novelId="String(novelId)"
@@ -176,7 +176,7 @@
       @close="isAddChapterBulkOpen = false"
     />
 
-    <ModalDeleteNovelChapter
+    <ModalNovelDeleteChapter
       v-if="isDeleteChapterOpen"
       :isOpen="isDeleteChapterOpen"
       :novelId="String(novelId)"
@@ -191,7 +191,7 @@
       "
     />
 
-    <ModalEditNovelChapter
+    <ModalNovelEditChapter
       v-if="isEditChapterOpen"
       :isOpen="isEditChapterOpen"
       :novelId="String(novelId)"
@@ -200,7 +200,7 @@
       @close="isEditChapterOpen = false"
     />
 
-    <ModalEditNovel
+    <ModalNovelEdit
       v-if="isEditNovelOpen"
       :isOpen="isEditNovelOpen"
       :novel-data="novel"

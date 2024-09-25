@@ -7,3 +7,5 @@
 - membuat fungsionalitas halaman-halaman lainnya (admin)
 
 <!-- progress -->
+
+- membuat halaman genre + fungsionalitas

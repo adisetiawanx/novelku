@@ -7,7 +7,7 @@
       <div class="flex justify-between items-center w-full py-3">
         <div class="flex-initial pr-5">
           <button
-            @click="isOpen = true"
+            @click="isAddGenreOpen = true"
             class="inline-flex items-center gap-2 shadow px-5 py-1.5 rounded font-medium bg-primary hover:bg-primary/80 hover text-white"
           >
             <PlusCircleIcon class="w-6" /><span class="text-sm">Genre</span>
@@ -15,6 +15,8 @@
         </div>
         <div class="border-l pl-5 flex-1">
           <input
+            @input="searchGenre"
+            v-model="pageQuery.search"
             type="text"
             class="text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
             placeholder="Search Genre..."
@@ -23,7 +25,14 @@
       </div>
     </template>
     <template #content>
-      <div class="relative overflow-x-auto border">
+      <UILoadingSpinner v-if="states.isLoading" />
+      <p
+        v-else-if="!genres || genres.length === 0"
+        class="text-sm italic text-gray-600"
+      >
+        No novel found.
+      </p>
+      <div v-else class="relative overflow-x-auto border">
         <table class="w-full text-sm text-left rtl:text-right table-auto">
           <thead class="text-xs uppercase border-b">
             <tr>
@@ -33,17 +42,19 @@
           </thead>
           <tbody>
             <tr
-              v-for="(novel, novelIndex) in 10"
+              v-for="(genre, genreIndex) in genres"
               :class="[
-                novelIndex + 1 === 10 ? '' : 'border-b',
+                genreIndex + 1 === 10 ? '' : 'border-b',
                 'odd:bg-white even:bg-gray-50',
               ]"
             >
               <td class="px-6 py-4">
-                <NuxtLink to="/" class="hover:text-blue-500">Fantasy</NuxtLink>
+                <NuxtLink to="/" class="hover:text-blue-500">{{
+                  genre.name
+                }}</NuxtLink>
               </td>
               <td class="px-6 py-4">
-                {{ new Date().toLocaleDateString("en-US") }}
+                {{ convertDate(genre.createdAt) }}
               </td>
             </tr>
           </tbody>
@@ -59,12 +70,22 @@
         <div class="border-l pl-5 flex-1">
           <div class="flex items-center gap-3">
             <button
-              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline"
+              :disabled="pageNumber === 1"
+              @click="
+                pageQuery.skip -= pageQuery.take;
+                fetchGenres();
+              "
+              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
             >
               Previous
             </button>
             <button
-              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline"
+              :disabled="pageNumber * pageQuery.take >= totalGenres"
+              @click="
+                pageQuery.skip += pageQuery.take;
+                fetchGenres();
+              "
+              class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -72,8 +93,9 @@
         </div>
       </div>
     </template>
+
     <HeadlessTransitionRoot
-      :show="isOpen"
+      :show="isAddGenreOpen"
       as="template"
       enter="duration-300 ease-out"
       enter-from="opacity-0"
@@ -82,7 +104,7 @@
       leave-from="opacity-100"
       leave-to="opacity-0"
     >
-      <HeadlessDialog @close="setIsOpen" class="relative z-[500]">
+      <HeadlessDialog @close="isAddGenreOpen = false" class="relative z-[500]">
         <!-- The backdrop, rendered as a fixed sibling to the panel container -->
         <div class="fixed inset-0 bg-black/30" />
 
@@ -132,12 +154,62 @@
 
 <script lang="ts" setup>
 import { PlusCircleIcon } from "@heroicons/vue/24/solid";
+import { debounce } from "lodash-es";
 
-const isOpen = ref(false);
+const states = ref({
+  isLoading: false,
+  success: "" as string | null,
+  error: "" as string | null,
+});
 
-function setIsOpen(value: boolean) {
-  isOpen.value = value;
+const route = useRoute();
+const pageNumber = route.query.page ? Number(route.query.page) : 1;
+const pageQuery = ref({
+  take: 10,
+  skip: (pageNumber - 1) * 10,
+  search: "",
+});
+
+const genres = ref<any>([]);
+const totalGenres = ref<number>(0);
+const isAddGenreOpen = ref(false);
+
+async function fetchGenres() {
+  const { getGenres } = useGenre();
+
+  clearStates();
+
+  states.value.isLoading = true;
+  const respone = await getGenres({
+    take: pageQuery.value.take,
+    skip: pageQuery.value.skip,
+    search: pageQuery.value.search,
+  });
+
+  genres.value = respone?.data?.genres ?? [];
+  totalGenres.value = respone?.data?.totalGenre ?? 0;
+
+  states.value.success = respone?.successMessage ?? null;
+  states.value.error = respone?.errorMessage ?? null;
+  states.value.isLoading = false;
 }
+
+const searchGenre = debounce(async () => {
+  states.value.isLoading = true;
+  pageQuery.value.skip = 0;
+  await fetchGenres();
+  states.value.isLoading = false;
+}, 500);
+
+function clearStates() {
+  states.value.success = null;
+  states.value.error = null;
+  states.value.isLoading = false;
+}
+
+onMounted(async () => {
+  await fetchGenres();
+});
 
 definePageMeta({
   middleware: "admin-only-middleware",

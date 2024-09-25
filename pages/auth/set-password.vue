@@ -117,27 +117,20 @@ const handleUpdatePassword = async () => {
     states.value.isLoading = false;
     return;
   }
+  try {
+    const response = await $fetch("/api/auth/password", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + useCookie("access_token").value,
+      },
+      body: {
+        password: userInput.value.password,
+        confirm_password: userInput.value.confirmPassword,
+      },
+    });
 
-  const { data: respone, error } = await useFetch("/api/auth/password", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: "Bearer " + useCookie("access_token").value,
-    },
-    body: {
-      password: userInput.value.password,
-      confirm_password: userInput.value.confirmPassword,
-    },
-  });
-
-  if (error.value) {
-    states.value.error = error.value.message;
-    states.value.isLoading = false;
-    return;
-  }
-
-  if (respone.value) {
-    states.value.success = respone.value.msg;
+    states.value.success = response.msg;
     states.value.isLoading = false;
 
     const callbackUrl = useCookie("callback_url").value;
@@ -145,6 +138,11 @@ const handleUpdatePassword = async () => {
       replace: true,
       external: true,
     });
+  } catch (error) {
+    if (error instanceof Error) {
+      states.value.error = error.message;
+      states.value.isLoading = false;
+    }
   }
 };
 </script>

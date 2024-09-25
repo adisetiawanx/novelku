@@ -18,6 +18,9 @@ export default defineNuxtConfig({
     "/auth": {
       redirect: "/",
     },
+    "auth/set-password": {
+      ssr: false,
+    },
     "/admin": {
       redirect: "/admin/dashboard",
     },
