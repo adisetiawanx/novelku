@@ -128,7 +128,9 @@
             class="text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
             placeholder="Search chapter..."
           />
-
+          <p v-if="chapters.length === 0" class="text-sm italic text-gray-600">
+            No chapters found.
+          </p>
           <div
             v-for="chapter in chapters"
             class="flex justify-between items-center gap-5 bg-gray-50 hover:bg-white border rounded px-3 py-2 w-full hover:text-primary"
@@ -142,7 +144,7 @@
                   isEditChapterOpen = true;
                   editChapterId = chapter.id;
                 "
-                class="cursor-pointer hover:underline"
+                class="cursor-pointer hover:underline text-sm"
               >
                 {{ chapter.title }}
               </button>

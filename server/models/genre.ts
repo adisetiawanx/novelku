@@ -43,3 +43,33 @@ export const createGenre = async (name: string) => {
     },
   });
 };
+
+export const updateGenre = async (id: string, name: string) => {
+  return await prisma.genre.update({
+    where: { id },
+    data: {
+      name,
+    },
+  });
+};
+
+export const getGenreById = async (id: string) => {
+  return await prisma.genre.findUnique({
+    where: { id },
+    include: {
+      novels: {
+        select: {
+          id: true,
+          title: true,
+          slug: true,
+        },
+      },
+    },
+  });
+};
+
+export const deleteGenre = async (id: string) => {
+  return await prisma.genre.delete({
+    where: { id },
+  });
+};

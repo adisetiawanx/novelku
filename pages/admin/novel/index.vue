@@ -50,7 +50,7 @@
                 v-for="(novel, novelIndex) in novels"
                 :class="[
                   novelIndex + 1 === 10 ? '' : 'border-b',
-                  'odd:bg-white even:bg-gray-50',
+                  'odd:bg-white even:bg-gray-50 hover:bg-primary/10',
                 ]"
               >
                 <td class="px-6 py-4 flex items-center">
@@ -94,7 +94,7 @@
                 <td class="px-6 py-4">
                   {{ arrayToTextWithComma(novel.tags.map((t: any) => t.name)) }}
                 </td>
-                <td class="px-6 py-4">
+                <td class="px-6 py-4 flex justify-end items-center">
                   <TrashIcon
                     @click="
                       deleteNovelId = novel.id;

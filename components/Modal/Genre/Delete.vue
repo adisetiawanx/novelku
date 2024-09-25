@@ -18,30 +18,49 @@
         <!-- Container to center the panel -->
         <div class="flex min-h-full items-center justify-center p-4">
           <!-- The actual dialog panel -->
-          <HeadlessDialogPanel class="w-full max-w-3xl rounded bg-white p-5">
+          <HeadlessDialogPanel class="w-full max-w-2xl rounded bg-white p-5">
             <HeadlessDialogTitle
               class="font-medium text-primary-dark border-b pb-3"
-              >Add New Genre</HeadlessDialogTitle
-            >
+              >Delete:
+              <span class="font-normal">{{ props.genreName }}</span>
+            </HeadlessDialogTitle>
 
             <HeadlessDialogDescription class="mt-3">
               <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
-                <input
-                  v-model="genreInput.name"
-                  type="text"
-                  spellcheck="false"
-                  class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                  placeholder="Name"
-                />
                 <UILoadingSpinner v-if="states.isLoading" />
-                <button
+                <div
                   v-else
-                  @click="addGenre"
-                  class="col-span-1 w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
+                  :class="[
+                    states.success ? 'order-2' : '',
+                    'col-span-4 flex gap-5',
+                  ]"
                 >
-                  Save
-                </button>
-                <div class="col-span-3 w-full">
+                  <button
+                    v-if="!states.success"
+                    @click="emit('close')"
+                    class="w-full bg-gray-500 hover:bg-gray-400 py-1 text-white font-medium rounded"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    v-if="!states.success"
+                    @click="deleteGenre"
+                    class="w-full bg-red-500 hover:bg-red-400 py-1 text-white font-medium rounded"
+                  >
+                    Delete
+                  </button>
+                  <button
+                    v-if="states.success"
+                    @click="
+                      emit('close');
+                      clearStates();
+                    "
+                    class="w-full mt-2 bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
+                  >
+                    Back
+                  </button>
+                </div>
+                <div class="col-span-4 w-full">
                   <UISuccessWrapper
                     v-if="states.success && !states.isLoading"
                     >{{ states.success }}</UISuccessWrapper
@@ -60,8 +79,16 @@
 </template>
 
 <script lang="ts" setup>
-defineProps({
+const props = defineProps({
   isOpen: Boolean,
+  genreId: {
+    type: String,
+    required: true,
+  },
+  genreName: {
+    type: String,
+    required: true,
+  },
 });
 
 const emit = defineEmits(["close", "fetchGenres"]);
@@ -72,32 +99,18 @@ const states = ref({
   error: "" as string | null,
 });
 
-const genreInput = ref({
-  name: "",
-});
-
-async function addGenre() {
-  const { createGenre } = useGenre();
+async function deleteGenre() {
+  const { deleteGenre } = useGenre();
 
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await createGenre({
-    name: genreInput.value.name,
-  });
+  const respone = await deleteGenre(props.genreId);
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
-  if (states.value.success) {
-    clearInput();
-  }
-
   emit("fetchGenres");
-}
-
-function clearInput() {
-  genreInput.value.name = "";
 }
 
 function clearStates() {
