@@ -73,6 +73,7 @@
               :disabled="pageNumber === 1"
               @click="
                 pageQuery.skip -= pageQuery.take;
+                pageNumber -= 1;
                 fetchGenres();
               "
               class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
@@ -83,6 +84,7 @@
               :disabled="pageNumber * pageQuery.take >= totalGenres"
               @click="
                 pageQuery.skip += pageQuery.take;
+                pageNumber += 1;
                 fetchGenres();
               "
               class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
@@ -93,63 +95,14 @@
         </div>
       </div>
     </template>
-
-    <HeadlessTransitionRoot
-      :show="isAddGenreOpen"
-      as="template"
-      enter="duration-300 ease-out"
-      enter-from="opacity-0"
-      enter-to="opacity-100"
-      leave="duration-200 ease-in"
-      leave-from="opacity-100"
-      leave-to="opacity-0"
-    >
-      <HeadlessDialog @close="isAddGenreOpen = false" class="relative z-[500]">
-        <!-- The backdrop, rendered as a fixed sibling to the panel container -->
-        <div class="fixed inset-0 bg-black/30" />
-
-        <!-- Full-screen scrollable container -->
-        <div class="fixed inset-0 w-screen overflow-y-auto">
-          <!-- Container to center the panel -->
-          <div class="flex min-h-full items-center justify-center p-4">
-            <!-- The actual dialog panel -->
-            <HeadlessDialogPanel class="w-full max-w-3xl rounded bg-white p-5">
-              <HeadlessDialogTitle
-                class="font-medium text-primary-dark border-b pb-3"
-                >Add New Genre</HeadlessDialogTitle
-              >
-
-              <HeadlessDialogDescription class="mt-3">
-                <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
-                  <input
-                    type="text"
-                    spellcheck="false"
-                    class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-                    placeholder="Name"
-                  />
-                  <button
-                    class="col-span-1 w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
-                  >
-                    Save
-                  </button>
-                  <div
-                    class="col-span-3 bg-green-200 border border-green-500 rounded py-1 px-2 flex justify-center"
-                  >
-                    <p class="text-sm">
-                      Successfully created new genre!<span
-                        class="ml-2 font-semibold"
-                        >Action</span
-                      >
-                    </p>
-                  </div>
-                </div>
-              </HeadlessDialogDescription>
-            </HeadlessDialogPanel>
-          </div>
-        </div>
-      </HeadlessDialog>
-    </HeadlessTransitionRoot>
   </NuxtLayout>
+
+  <ModalGenreAdd
+    v-if="isAddGenreOpen"
+    :isOpen="isAddGenreOpen"
+    @fetchGenres="fetchGenres"
+    @close="isAddGenreOpen = false"
+  />
 </template>
 
 <script lang="ts" setup>

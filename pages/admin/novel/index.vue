@@ -125,6 +125,7 @@
                 :disabled="pageNumber === 1"
                 @click="
                   pageQuery.skip -= pageQuery.take;
+                  pageNumber -= 1;
                   fetchNovels();
                 "
                 class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"
@@ -135,6 +136,7 @@
                 :disabled="pageNumber * pageQuery.take >= totalNovel"
                 @click="
                   pageQuery.skip += pageQuery.take;
+                  pageNumber += 1;
                   fetchNovels();
                 "
                 class="px-3 py-1 border rounded font-medium text-blue-600 hover:underline disabled:cursor-not-allowed"

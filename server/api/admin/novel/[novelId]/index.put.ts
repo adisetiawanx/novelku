@@ -44,7 +44,7 @@ export default defineEventHandler(async (event) => {
 
     const isSlugExist = await getNovelSlugBySlug(slug);
 
-    if (isSlugExist) {
+    if (isSlugExist && isSlugExist.id !== params.novelId) {
       throw new ErrorWithCode(400, "Slug already exist");
     }
 

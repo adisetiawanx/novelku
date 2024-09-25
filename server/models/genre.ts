@@ -35,3 +35,11 @@ export const getGenres = async (
     totalGenre,
   };
 };
+
+export const createGenre = async (name: string) => {
+  return await prisma.genre.create({
+    data: {
+      name,
+    },
+  });
+};

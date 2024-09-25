@@ -49,6 +49,7 @@ export const getNovelSlugBySlug = async (slug: string) => {
     },
     select: {
       slug: true,
+      id: true,
     },
   });
 };
@@ -165,18 +166,21 @@ export const updateNovelById = async (id: string, novel: createNovelData) => {
       year: novel.year,
       imageUrl: novel.image_url,
       genres: {
-        set: novel.genres.map((genre) => ({
-          name: genre.name.toLowerCase(),
+        connectOrCreate: novel.genres.map((genre) => ({
+          create: { name: genre.name.toLowerCase() },
+          where: { name: genre.name },
         })),
       },
       authors: {
-        set: novel.authors.map((author) => ({
-          name: author.name,
+        connectOrCreate: novel.authors.map((author) => ({
+          create: { name: author.name },
+          where: { name: author.name },
         })),
       },
       tags: {
-        set: novel.tags.map((tag) => ({
-          name: tag.name,
+        connectOrCreate: novel.tags.map((tag) => ({
+          create: { name: tag.name },
+          where: { name: tag.name },
         })),
       },
     },

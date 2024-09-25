@@ -36,7 +36,35 @@ export default () => {
     }
   };
 
+  const createGenre = async ({ name }: { name: string }) => {
+    try {
+      const respone = await $fetch("/api/admin/genre", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + useCookie("access_token").value,
+        },
+        body: { name },
+      });
+
+      return {
+        errorMessage: null,
+        successMessage: respone.msg,
+        data: respone.data,
+      };
+    } catch (error) {
+      if (error instanceof Error) {
+        return {
+          errorMessage: error.message,
+          successMessage: null,
+          data: null,
+        };
+      }
+    }
+  };
+
   return {
     getGenres,
+    createGenre,
   };
 };
