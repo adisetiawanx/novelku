@@ -3,7 +3,7 @@
 ## Tech Stack
 
 - Nuxt 3
-- Bun
+- Node
 
 ## Features
 
@@ -21,15 +21,15 @@ prerequired:
 - Setting .env file
 
 ```bash
-bun install
+node install
 ```
 
 ```bash
-bun prisma:migrate
+node run prisma:migrate
 ```
 
 ```bash
-bun prisma:generate
+node run prisma:generate
 ```
 
 ## Notes
