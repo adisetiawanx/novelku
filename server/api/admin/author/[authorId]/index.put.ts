@@ -1,4 +1,4 @@
-import { getGenreById } from "~/server/models/genre";
+import { updateAuthor } from "~/server/models/author";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -6,22 +6,21 @@ export default defineEventHandler(async (event) => {
 
     const params = getRouterParams(event);
 
-    const genreData = await getGenreById(params.genreId);
+    const body = await readBody(event);
+    let { name } = body;
+
+    if (!name) {
+      throw new ErrorWithCode(400, "Missing required fields");
+    }
+
+    const author = await updateAuthor(params.authorId, name);
 
     return {
-      msg: "Genre fetched successfully",
+      msg: "Author updated successfully",
       data: {
-        genre: {
-          id: genreData?.id,
-          name: genreData?.name,
+        auhtor: {
+          id: author.id,
         },
-        novels: genreData?.novels.map((novel) => {
-          return {
-            id: novel.id,
-            title: novel.title,
-            slug: novel.slug,
-          };
-        }),
       },
     };
   } catch (error) {

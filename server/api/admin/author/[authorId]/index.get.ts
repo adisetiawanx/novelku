@@ -1,4 +1,4 @@
-import { getGenreById } from "~/server/models/genre";
+import { getAuthorById } from "~/server/models/author";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -6,16 +6,16 @@ export default defineEventHandler(async (event) => {
 
     const params = getRouterParams(event);
 
-    const genreData = await getGenreById(params.genreId);
+    const authorData = await getAuthorById(params.authorId);
 
     return {
-      msg: "Genre fetched successfully",
+      msg: "Author fetched successfully",
       data: {
-        genre: {
-          id: genreData?.id,
-          name: genreData?.name,
+        author: {
+          id: authorData?.id,
+          name: authorData?.name,
         },
-        novels: genreData?.novels.map((novel) => {
+        novels: authorData?.novels.map((novel) => {
           return {
             id: novel.id,
             title: novel.title,

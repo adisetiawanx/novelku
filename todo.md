@@ -4,6 +4,6 @@
 
 <!-- todo -->
 
-- membuat fungsionalitas halaman-halaman lainnya (admin), Genre (DONE)
+- membuat fungsionalitas halaman-halaman lainnya (admin), Genre (DONE), Author (DONE)
 
 <!-- progress -->

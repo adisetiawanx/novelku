@@ -1,27 +1,24 @@
-import { getGenreById } from "~/server/models/genre";
+import { createAuthor } from "~/server/models/author";
 
 export default defineEventHandler(async (event) => {
   try {
     await isAdminAuthorize(event);
 
-    const params = getRouterParams(event);
+    const body = await readBody(event);
+    let { name } = body;
 
-    const genreData = await getGenreById(params.genreId);
+    if (!name) {
+      throw new ErrorWithCode(400, "Missing required fields");
+    }
+
+    const author = await createAuthor(name);
 
     return {
-      msg: "Genre fetched successfully",
+      msg: "Author created successfully",
       data: {
-        genre: {
-          id: genreData?.id,
-          name: genreData?.name,
+        author: {
+          id: author.id,
         },
-        novels: genreData?.novels.map((novel) => {
-          return {
-            id: novel.id,
-            title: novel.title,
-            slug: novel.slug,
-          };
-        }),
       },
     };
   } catch (error) {

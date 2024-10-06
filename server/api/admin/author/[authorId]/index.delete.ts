@@ -1,4 +1,4 @@
-import { getGenreById } from "~/server/models/genre";
+import { deleteAuthor } from "~/server/models/author";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -6,22 +6,14 @@ export default defineEventHandler(async (event) => {
 
     const params = getRouterParams(event);
 
-    const genreData = await getGenreById(params.genreId);
+    const author = await deleteAuthor(params.authorId);
 
     return {
-      msg: "Genre fetched successfully",
+      msg: "Author deleted successfully",
       data: {
-        genre: {
-          id: genreData?.id,
-          name: genreData?.name,
+        author: {
+          id: author.id,
         },
-        novels: genreData?.novels.map((novel) => {
-          return {
-            id: novel.id,
-            title: novel.title,
-            slug: novel.slug,
-          };
-        }),
       },
     };
   } catch (error) {

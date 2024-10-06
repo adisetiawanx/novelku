@@ -1,27 +1,23 @@
-import { getGenreById } from "~/server/models/genre";
+import { getAuthors } from "~/server/models/author";
 
 export default defineEventHandler(async (event) => {
   try {
     await isAdminAuthorize(event);
 
-    const params = getRouterParams(event);
+    const query = getQuery(event);
+    const { take, skip, search } = query;
 
-    const genreData = await getGenreById(params.genreId);
+    const authorsData = await getAuthors(
+      Number(take) || undefined,
+      Number(skip) || undefined,
+      String(search) || undefined
+    );
 
     return {
-      msg: "Genre fetched successfully",
+      msg: "Author fetched successfully",
       data: {
-        genre: {
-          id: genreData?.id,
-          name: genreData?.name,
-        },
-        novels: genreData?.novels.map((novel) => {
-          return {
-            id: novel.id,
-            title: novel.title,
-            slug: novel.slug,
-          };
-        }),
+        authors: authorsData.authors,
+        totalAuthor: authorsData.totalAuthor,
       },
     };
   } catch (error) {

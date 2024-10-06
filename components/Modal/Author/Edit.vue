@@ -21,7 +21,7 @@
           <HeadlessDialogPanel class="w-full max-w-3xl rounded bg-white p-5">
             <HeadlessDialogTitle
               class="font-medium text-primary-dark border-b pb-3"
-              >Edit New Genre</HeadlessDialogTitle
+              >Edit New Author</HeadlessDialogTitle
             >
             <div class="w-full mt-2">
               <p
@@ -34,7 +34,7 @@
             <HeadlessDialogDescription class="mt-3">
               <div class="grid grid-cols-4 items-center gap-y-3 gap-x-5">
                 <input
-                  v-model="genreInput.name"
+                  v-model="authorInput.name"
                   type="text"
                   spellcheck="false"
                   class="col-span-4 text-sm border w-full border-gray-300 rounded px-3 py-1.5 outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
@@ -43,7 +43,7 @@
                 <UILoadingSpinner v-if="states.isLoading" />
                 <button
                   v-else
-                  @click="editGenre"
+                  @click="editAuthor"
                   class="col-span-1 w-full bg-primary hover:bg-primary-hover py-1 text-white font-medium rounded"
                 >
                   Save
@@ -102,12 +102,12 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
-  genreId: {
+  authorId: {
     type: String,
     required: true,
   },
 });
-const emit = defineEmits(["close", "fetchGenres"]);
+const emit = defineEmits(["close", "fetchAuthors"]);
 
 const states = ref({
   isLoading: false,
@@ -115,53 +115,53 @@ const states = ref({
   error: "" as string | null,
 });
 
-const genreInput = ref({
+const authorInput = ref({
   name: "",
 });
 
-const genreOriginalData = ref({
+const authorOriginalData = ref({
   name: "",
   novels: [] as any[],
 });
 
 const novels = ref([] as any[]);
 
-async function editGenre() {
-  const { updateGenre } = useGenre();
+async function editAuthor() {
+  const { updateAuthor } = useAuthor();
 
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await updateGenre({
-    id: props.genreId,
-    name: genreInput.value.name,
+  const respone = await updateAuthor({
+    id: props.authorId,
+    name: authorInput.value.name,
   });
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
-  emit("fetchGenres");
+  emit("fetchAuthors");
 }
 
-async function fetchGenre() {
-  const { getGenreById } = useGenre();
+async function fetchAuthor() {
+  const { getAuthorById } = useAuthor();
 
   clearStates();
 
   states.value.isLoading = true;
-  const respone = await getGenreById(props.genreId);
+  const respone = await getAuthorById(props.authorId);
   states.value.success = respone?.successMessage ?? null;
   states.value.error = respone?.errorMessage ?? null;
   states.value.isLoading = false;
 
-  genreOriginalData.value.name = respone!.data!.genre?.name ?? "";
-  genreOriginalData.value.novels = respone!.data?.novels ?? [];
-  genreInput.value.name = respone!.data!.genre?.name ?? "";
+  authorOriginalData.value.name = respone!.data!.author?.name ?? "";
+  authorOriginalData.value.novels = respone!.data?.novels ?? [];
+  authorInput.value.name = respone!.data!.author?.name ?? "";
   novels.value = respone!.data?.novels ?? [];
 }
 
 function clearChanges() {
-  genreInput.value.name = genreOriginalData.value.name;
+  authorInput.value.name = authorOriginalData.value.name;
 }
 
 function clearStates() {
@@ -174,9 +174,9 @@ const searchNovel = debounce((event: any) => {
   let filteredNovels = [];
   const search = event.target.value.toLowerCase();
   if (!event.target.value) {
-    filteredNovels = genreOriginalData.value.novels;
+    filteredNovels = authorOriginalData.value.novels;
   } else {
-    filteredNovels = genreOriginalData.value.novels.filter((chapter: any) =>
+    filteredNovels = authorOriginalData.value.novels.filter((chapter: any) =>
       chapter.title.toLowerCase().includes(search)
     );
   }
@@ -185,6 +185,6 @@ const searchNovel = debounce((event: any) => {
 }, 500);
 
 onMounted(async () => {
-  await fetchGenre();
+  await fetchAuthor();
 });
 </script>
