@@ -1,4 +1,4 @@
-import { createTag } from "~/server/models/tag";
+import { createTag } from "~/server/models/admin/tag";
 
 export default defineEventHandler(async (event) => {
   try {

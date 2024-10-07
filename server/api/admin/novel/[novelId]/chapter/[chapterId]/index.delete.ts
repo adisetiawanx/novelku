@@ -1,4 +1,4 @@
-import { deleteChapter } from "~/server/models/chapter";
+import { deleteChapter } from "~/server/models/admin/chapter";
 
 export default defineEventHandler(async (event) => {
   try {

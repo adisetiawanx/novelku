@@ -94,7 +94,7 @@ function changeChapterBulk(e: any) {
 }
 
 async function postChapters() {
-  const { createChapterBulk } = useChapter();
+  const { createChapterBulk } = useChapterAdmin();
 
   clearStates();
 

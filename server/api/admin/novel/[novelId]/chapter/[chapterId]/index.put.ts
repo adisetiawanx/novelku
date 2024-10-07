@@ -1,4 +1,4 @@
-import { updateChapter } from "~/server/models/chapter";
+import { updateChapter } from "~/server/models/admin/chapter";
 
 export default defineEventHandler(async (event) => {
   try {

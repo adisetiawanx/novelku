@@ -200,7 +200,7 @@ const deleteNovelId = ref("");
 const deleteNovelTitle = ref("");
 
 async function fetchNovels() {
-  const { getNovels } = useNovel();
+  const { getNovels } = useNovelAdmin();
 
   clearStates();
 

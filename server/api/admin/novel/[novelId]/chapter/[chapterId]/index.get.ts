@@ -1,4 +1,4 @@
-import { getChapterById } from "~/server/models/chapter";
+import { getChapterById } from "~/server/models/admin/chapter";
 
 export default defineEventHandler(async (event) => {
   try {

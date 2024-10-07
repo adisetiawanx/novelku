@@ -3,7 +3,7 @@ import path from "path";
 
 import extract from "extract-zip";
 import multer from "multer";
-import { createChapterBulk } from "~/server/models/chapter";
+import { createChapterBulk } from "~/server/models/admin/chapter";
 
 import { callNodeListener } from "h3";
 

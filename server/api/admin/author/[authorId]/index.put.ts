@@ -1,4 +1,4 @@
-import { updateAuthor } from "~/server/models/author";
+import { updateAuthor } from "~/server/models/admin/author";
 
 export default defineEventHandler(async (event) => {
   try {

@@ -77,7 +77,7 @@ const tagInput = ref({
 });
 
 async function addTag() {
-  const { createTag } = useTag();
+  const { createTag } = useTagAdmin();
 
   clearStates();
 

@@ -1,4 +1,4 @@
-import { updateGenre } from "~/server/models/genre";
+import { updateGenre } from "~/server/models/admin/genre";
 
 export default defineEventHandler(async (event) => {
   try {

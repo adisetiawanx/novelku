@@ -1,4 +1,7 @@
-import { getNovelSlugBySlug, updateNovelById } from "~/server/models/novel";
+import {
+  getNovelSlugBySlug,
+  updateNovelById,
+} from "~/server/models/admin/novel";
 import { createNovelData } from "~/server/types/novel";
 
 export default defineEventHandler(async (event) => {

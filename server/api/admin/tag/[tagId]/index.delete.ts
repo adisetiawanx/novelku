@@ -1,4 +1,4 @@
-import { deleteTag } from "~/server/models/tag";
+import { deleteTag } from "~/server/models/admin/tag";
 
 export default defineEventHandler(async (event) => {
   try {

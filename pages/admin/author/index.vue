@@ -173,7 +173,7 @@ const deleteAuthorId = ref("");
 const deleteAuthorName = ref("");
 
 async function fetchAuthors() {
-  const { getAuthors } = useAuthor();
+  const { getAuthors } = useAuthorAdmin();
 
   clearStates();
 

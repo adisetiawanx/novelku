@@ -100,7 +100,7 @@ const states = ref({
 });
 
 async function deleteGenre() {
-  const { deleteGenre } = useGenre();
+  const { deleteGenre } = useGenreAdmin();
 
   clearStates();
 

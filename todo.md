@@ -4,6 +4,8 @@
 
 <!-- todo -->
 
-- membuat fungsionalitas halaman-halaman lainnya (admin), Genre (DONE), Author (DONE), Tag (DONE)
+- membuat fungsionalitas halaman Media File, User, Comment
 
 <!-- progress -->
+
+- membuat tampilan homepage

@@ -127,7 +127,7 @@ const genreOriginalData = ref({
 const novels = ref([] as any[]);
 
 async function editGenre() {
-  const { updateGenre } = useGenre();
+  const { updateGenre } = useGenreAdmin();
 
   clearStates();
 
@@ -144,7 +144,7 @@ async function editGenre() {
 }
 
 async function fetchGenre() {
-  const { getGenreById } = useGenre();
+  const { getGenreById } = useGenreAdmin();
 
   clearStates();
 

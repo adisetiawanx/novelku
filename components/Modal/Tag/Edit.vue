@@ -127,7 +127,7 @@ const tagOriginalData = ref({
 const novels = ref([] as any[]);
 
 async function editTag() {
-  const { updateTag } = useTag();
+  const { updateTag } = useTagAdmin();
 
   clearStates();
 
@@ -144,7 +144,7 @@ async function editTag() {
 }
 
 async function fetchTag() {
-  const { getTagById } = useTag();
+  const { getTagById } = useTagAdmin();
 
   clearStates();
 

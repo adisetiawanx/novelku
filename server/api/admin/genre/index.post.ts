@@ -1,4 +1,4 @@
-import { createGenre } from "~/server/models/genre";
+import { createGenre } from "~/server/models/admin/genre";
 
 export default defineEventHandler(async (event) => {
   try {

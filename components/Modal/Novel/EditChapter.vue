@@ -115,7 +115,7 @@ const chapterOriginalData = ref({
 });
 
 async function editChapter() {
-  const { updateChapter } = useChapter();
+  const { updateChapter } = useChapterAdmin();
 
   clearStates();
 
@@ -147,7 +147,7 @@ function clearChanges() {
 }
 
 onMounted(async () => {
-  const { getChapterById } = useChapter();
+  const { getChapterById } = useChapterAdmin();
 
   states.value.isLoading = true;
   const respone = await getChapterById(props.chapterId, props.novelId);

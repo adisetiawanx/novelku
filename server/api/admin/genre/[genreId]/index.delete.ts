@@ -1,4 +1,4 @@
-import { deleteGenre } from "~/server/models/genre";
+import { deleteGenre } from "~/server/models/admin/genre";
 
 export default defineEventHandler(async (event) => {
   try {

@@ -100,7 +100,7 @@ const states = ref({
 });
 
 async function deleteAuthor() {
-  const { deleteAuthor } = useAuthor();
+  const { deleteAuthor } = useAuthorAdmin();
 
   clearStates();
 

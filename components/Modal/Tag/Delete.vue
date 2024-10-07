@@ -100,7 +100,7 @@ const states = ref({
 });
 
 async function deleteTag() {
-  const { deleteTag } = useTag();
+  const { deleteTag } = useTagAdmin();
 
   clearStates();
 

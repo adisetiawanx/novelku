@@ -1,4 +1,4 @@
-import { deleteNovel } from "~/server/models/novel";
+import { deleteNovel } from "~/server/models/admin/novel";
 
 export default defineEventHandler(async (event) => {
   try {

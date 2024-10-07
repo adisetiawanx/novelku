@@ -1,27 +1,22 @@
-import { getTagById } from "~/server/models/admin/tag";
+import { getNovels } from "~/server/models/novel";
 
 export default defineEventHandler(async (event) => {
   try {
-    await isAdminAuthorize(event);
+    const query = getQuery(event);
+    const { take, skip, search, status } = query;
 
-    const params = getRouterParams(event);
-
-    const tagData = await getTagById(params.tagId);
+    const novelsData = await getNovels(
+      Number(take) || undefined,
+      Number(skip) || undefined,
+      String(search) || undefined,
+      String(status) || undefined
+    );
 
     return {
-      msg: "Tag fetched successfully",
+      msg: "Novel fetched successfully",
       data: {
-        tag: {
-          id: tagData?.id,
-          name: tagData?.name,
-        },
-        novels: tagData?.novels.map((novel) => {
-          return {
-            id: novel.id,
-            title: novel.title,
-            slug: novel.slug,
-          };
-        }),
+        novels: novelsData.novels,
+        totalNovel: novelsData.totalNovel,
       },
     };
   } catch (error) {

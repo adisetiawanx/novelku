@@ -100,7 +100,7 @@ const states = ref({
 });
 
 async function deleteNovel() {
-  const { deleteNovel } = useNovel();
+  const { deleteNovel } = useNovelAdmin();
 
   clearStates();
 

@@ -1,4 +1,4 @@
-import { getNovels } from "~/server/models/novel";
+import { getNovels } from "~/server/models/admin/novel";
 
 export default defineEventHandler(async (event) => {
   try {

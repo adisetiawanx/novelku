@@ -245,7 +245,7 @@ const isEditChapterOpen = ref(false);
 const editChapterId = ref("");
 
 async function fetchNovel() {
-  const { getNovel } = useNovel();
+  const { getNovel } = useNovelAdmin();
 
   clearStates();
 

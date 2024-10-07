@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <button @click="login">Login</button>
-  </div>
+  <NuxtLayout name="main-layout">
+    <div class="container space-y-10">
+      <ListNovelFeatured title="Novel Ongoing" :novel-status="'ONGOING'" />
+      <ListNovelFeatured title="Novel Tamat" :novel-status="'COMPLETED'" />
+    </div>
+  </NuxtLayout>
 </template>
 
-<script lang="ts" setup>
-const { login } = useAuth();
-
-
-</script>
+<script lang="ts" setup></script>

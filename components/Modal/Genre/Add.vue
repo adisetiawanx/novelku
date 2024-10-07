@@ -77,7 +77,7 @@ const genreInput = ref({
 });
 
 async function addGenre() {
-  const { createGenre } = useGenre();
+  const { createGenre } = useGenreAdmin();
 
   clearStates();
 

@@ -173,7 +173,7 @@ const deleteGenreId = ref("");
 const deleteGenreName = ref("");
 
 async function fetchGenres() {
-  const { getGenres } = useGenre();
+  const { getGenres } = useGenreAdmin();
 
   clearStates();
 

@@ -127,7 +127,7 @@ const authorOriginalData = ref({
 const novels = ref([] as any[]);
 
 async function editAuthor() {
-  const { updateAuthor } = useAuthor();
+  const { updateAuthor } = useAuthorAdmin();
 
   clearStates();
 
@@ -144,7 +144,7 @@ async function editAuthor() {
 }
 
 async function fetchAuthor() {
-  const { getAuthorById } = useAuthor();
+  const { getAuthorById } = useAuthorAdmin();
 
   clearStates();
 

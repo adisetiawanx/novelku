@@ -110,7 +110,7 @@ const states = ref({
 });
 
 async function deleteChapter() {
-  const { deleteChapter } = useChapter();
+  const { deleteChapter } = useChapterAdmin();
 
   clearStates();
 

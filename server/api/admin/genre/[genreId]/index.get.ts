@@ -1,4 +1,4 @@
-import { getGenreById } from "~/server/models/genre";
+import { getGenreById } from "~/server/models/admin/genre";
 
 export default defineEventHandler(async (event) => {
   try {

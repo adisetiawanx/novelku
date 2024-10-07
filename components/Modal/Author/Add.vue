@@ -77,7 +77,7 @@ const authorInput = ref({
 });
 
 async function addAuthor() {
-  const { createAuhtor } = useAuthor();
+  const { createAuhtor } = useAuthorAdmin();
 
   clearStates();
 

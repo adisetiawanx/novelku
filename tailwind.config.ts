@@ -19,7 +19,12 @@ export default {
       colors: {
         primary: "#4063b2",
         "primary-hover": "#30529f",
-        "primary-dark": "#333333",
+        "primary-dark": "#383838",
+        "primary-light": "#f5f5f5",
+        "primary-darker": "#121212",
+      },
+      aspectRatio: {
+        "6/9": "6 / 9",
       },
     },
   },

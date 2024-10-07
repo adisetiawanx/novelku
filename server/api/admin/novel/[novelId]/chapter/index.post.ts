@@ -1,4 +1,4 @@
-import { createChapter } from "~/server/models/chapter";
+import { createChapter } from "~/server/models/admin/chapter";
 
 export default defineEventHandler(async (event) => {
   try {

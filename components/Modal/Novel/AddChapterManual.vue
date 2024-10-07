@@ -98,7 +98,7 @@ const chapterInput = ref({
 });
 
 async function postChapter() {
-  const { createChapter } = useChapter();
+  const { createChapter } = useChapterAdmin();
 
   clearStates();
 

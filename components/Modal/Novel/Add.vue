@@ -184,7 +184,7 @@ const novelInput = ref({
 });
 
 const uploadNovelCover = async (event: Event) => {
-  const { uploadNovelCover } = useNovel();
+  const { uploadNovelCover } = useNovelAdmin();
 
   clearStates();
 
@@ -201,7 +201,7 @@ const uploadNovelCover = async (event: Event) => {
 };
 
 async function postNovel(postStatus: string) {
-  const { createNovel } = useNovel();
+  const { createNovel } = useNovelAdmin();
 
   clearStates();
 

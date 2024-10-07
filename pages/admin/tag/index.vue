@@ -84,8 +84,7 @@
           <div class="flex-initial pr-5">
             <span class="text-gray-600"
               >Showing {{ (pageNumber - 1) * pageQuery.take + 1 }} to
-              {{ pageNumber * pageQuery.take }} of
-              {{ totalTags }} entries</span
+              {{ pageNumber * pageQuery.take }} of {{ totalTags }} entries</span
             >
           </div>
           <div class="border-l pl-5 flex-1">
@@ -173,7 +172,7 @@ const deleteTagId = ref("");
 const deleteTagName = ref("");
 
 async function fetchTags() {
-  const { getTags } = useTag();
+  const { getTags } = useTagAdmin();
 
   clearStates();
 
