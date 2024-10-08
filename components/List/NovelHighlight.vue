@@ -1,16 +1,10 @@
 <template>
   <section :id="props.title.split(' ').join('_').toLowerCase()">
-    <div
-      class="flex justify-between items-center border-b border-[#252525] pb-2"
-    >
+    <div class="flex gap-2 items-center border-b border-[#252525] pb-2">
       <h2 class="font-medium text-xl">{{ props.title }}</h2>
-      <NuxtLink
-        :to="`/novel?status=${props.novelStatus.toLowerCase()}`"
-        class="text-sm text-primary font-medium"
-        >Lihat semua</NuxtLink
-      >
+      <FireIcon class="w-6 h-6 text-red-500" />
     </div>
-    <div class="grid lg:grid-cols-6 md:grid-cols-3 grid-cols-2 mt-3 gap-5">
+    <div class="grid lg:grid-cols-4 grid-cols-2 mt-3 gap-5">
       <NuxtLink
         :to="`/novel/${novel.slug}`"
         :key="novel.slug"
@@ -26,10 +20,10 @@
               class="w-full object-cover rounded-md aspect-6/9"
             />
             <span
-              class="absolute flex gap-1 bg-primary-darker rounded-br-md p-1 top-0 left-0"
+              class="absolute flex items-center gap-1 bg-primary-darker rounded-br-md p-1 top-0 left-0"
             >
-              <StarIcon class="w-4 h-4 text-yellow-500" />
-              <span class="text-xs font-medium">{{
+              <StarIcon class="w-5 h-5 text-yellow-500" />
+              <span class="text-sm font-medium">{{
                 (novel.rating / 2).toFixed(1)
               }}</span>
             </span>
@@ -37,23 +31,21 @@
               <img
                 :src="setNovelFlag(novel.type)"
                 alt="Japan Flag"
-                class="w-6"
+                class="w-8"
               />
             </span>
           </figure>
-          <p
-            class="text-sm font-medium line-clamp-2 group-hover:underline transition"
-          >
+          <p class="font-medium line-clamp-2 group-hover:underline transition">
             {{ novel.title || "-" }}
           </p>
-          <p class="text-xs flex gap-1 items-center">
-            <BookmarkIcon class="w-4 h-4 flex-initial" /><span
+          <p class="text-sm flex gap-1 items-center">
+            <BookmarkIcon class="w-5 h-5 flex-initial" /><span
               class="line-clamp-1 flex-1"
               >{{ setNovelStatus(novel.status) }}</span
             >
           </p>
-          <p class="text-xs flex gap-1 items-center flex-initial">
-            <ListBulletIcon class="w-4 h-4" /><span
+          <p class="text-sm flex gap-1 items-center flex-initial">
+            <ListBulletIcon class="w-5 h-5" /><span
               class="line-clamp-1 flex-1"
               >{{ novel.chapters[0]?.title || "-" }}</span
             >
@@ -67,7 +59,7 @@
 <script lang="ts" setup>
 import { BookmarkIcon, ListBulletIcon } from "@heroicons/vue/24/outline";
 
-import { StarIcon } from "@heroicons/vue/24/solid";
+import { StarIcon, FireIcon } from "@heroicons/vue/24/solid";
 
 const props = defineProps({
   title: {

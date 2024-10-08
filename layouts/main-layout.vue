@@ -1,45 +1,20 @@
 <template>
   <header
-    class="bg-primary-darker text-primary-light flex items-center min-h-[90px] border-b border-[#252525]"
+    class="bg-primary-darker text-primary-light flex items-center min-h-[85px] border-b border-[#252525] sticky top-0 z-[999] shadow-sm"
   >
     <div class="container flex justify-between items-center">
       <div class="flex items-center justify-between gap-10">
-        <img
-          src="https://novelku.id/wp-content/uploads/2022/03/logo-novelku.id-fix.png"
-          alt="Logo"
-          class="w-[250px]"
-        />
+        <img src="/assets/novelku-logo-long.png" alt="Logo" class="w-[250px]" />
         <nav>
           <ul class="flex gap-5 items-center font-medium">
-            <li class="flex gap-1.5 items-center hover:text-primary transition">
-              <BookOpenIcon class="w-6 h-6" />
-              <NuxtLink class="underline underline-offset-2" to="/"
-                >Ongoing</NuxtLink
-              >
-            </li>
-            <li class="flex gap-1.5 items-center hover:text-primary transition">
-              <AcademicCapIcon class="w-6 h-6" />
-              <NuxtLink class="underline underline-offset-2" to="/"
-                >Tamat</NuxtLink
-              >
-            </li>
-            <li class="flex gap-1.5 items-center hover:text-primary transition">
+            <li
+              v-for="menu in menus"
+              class="flex gap-1.5 items-center hover:text-primary transition"
+            >
               <BookmarkSquareIcon class="w-6 h-6" />
-              <NuxtLink class="underline underline-offset-2" to="/"
-                >Korea</NuxtLink
-              >
-            </li>
-            <li class="flex gap-1.5 items-center hover:text-primary transition">
-              <BookmarkSquareIcon class="w-6 h-6" />
-              <NuxtLink class="underline underline-offset-2" to="/"
-                >China</NuxtLink
-              >
-            </li>
-            <li class="flex gap-1.5 items-center hover:text-primary transition">
-              <BookmarkSquareIcon class="w-6 h-6" />
-              <NuxtLink class="underline underline-offset-2" to="/"
-                >Jepang</NuxtLink
-              >
+              <NuxtLink :to="menu.href" class="underline underline-offset-2">{{
+                menu.name
+              }}</NuxtLink>
             </li>
             <button class="inline-flex gap-1.5 hover:text-primary transition">
               <MagnifyingGlassIcon class="w-5 h-5" />
@@ -50,7 +25,7 @@
       </div>
       <div>
         <button
-          @click="login"
+          @click="isLoginOpen = true"
           class="inline-flex gap-1.5 items-center bg-primary text-primary-light px-4 py-1.5 rounded-md font-medium uppercase hover:bg-primary-light hover:text-primary-dark transition"
         >
           <UserIcon class="w-5 h-5" />
@@ -71,16 +46,22 @@
       </p>
     </div>
   </footer>
+
+  <ModalAuthLogin :isOpen="isLoginOpen" @close="isLoginOpen = false" />
 </template>
 
 <script lang="ts" setup>
 import {
-  BookOpenIcon,
-  AcademicCapIcon,
   BookmarkSquareIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/vue/24/outline";
 import { UserIcon } from "@heroicons/vue/24/solid";
 
-const { login } = useAuth();
+const isLoginOpen = ref(false);
+
+const menus = ref([
+  { name: "Korea", href: "/novel?type=web_novel_korea" },
+  { name: "China", href: "/novel?type=web_novel_china" },
+  { name: "Jepang", href: "/novel?type=web_novel_japan" },
+]);
 </script>
